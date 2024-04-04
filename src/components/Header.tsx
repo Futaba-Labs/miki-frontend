@@ -4,14 +4,11 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 export default function Header() {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        padding: 12,
-      }}
-    >
-      <ConnectButton />
+    <div className='flex justify-between p-3'>
+      <p className='text-white text-lg'>Miki</p>
+      <div>
+        <ConnectButton />
+      </div>
     </div>
   )
 }
