@@ -3,8 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 import '@rainbow-me/rainbowkit/styles.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import Header from '@/components/Header'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -13,9 +12,12 @@ export const metadata: Metadata = {
 
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en'>
+    <html lang='en' className='dark'>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   )
