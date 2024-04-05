@@ -5,7 +5,7 @@ import { Card, CardBody, CardHeader } from '@nextui-org/react'
 export default function Deposit() {
   return (
     <>
-      <Card isBlurred className='border-none bg-white dark:bg-gray-700/60 h-[400px] w-[300px] mr-16' shadow='sm'>
+      <Card isBlurred className='border-none bg-white dark:bg-gray-700/60 h-[400px] w-[300px] rounded-lg mr-16' shadow='sm'>
         <CardHeader className='pb-0 pt-10 px-4 flex-col items-start'>
           <h4 className='text-2xl font-roboto font-normal text-white'>Deposit Assets</h4>
         </CardHeader>
