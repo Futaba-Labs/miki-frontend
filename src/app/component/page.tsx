@@ -1,16 +1,20 @@
 'use client'
 
-import AccountOperations from '@/components/AccountOperations'
-import YourDeoisits from '@/components/YourDeposits'
+import { TabTest, AccountOperations, YourDeposits } from '@/components'
 
 export default function Component() {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-      <div style={{ marginRight: '20px' }}>
-        <YourDeoisits />
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+        <div style={{ marginRight: '20px' }}>
+          <YourDeposits />
+        </div>
+        <div style={{ marginLeft: '20px' }}>
+          <AccountOperations />
+        </div>
       </div>
-      <div style={{ marginLeft: '20px' }}>
-        <AccountOperations />
+      <div>
+        <TabTest />
       </div>
     </div>
   )
