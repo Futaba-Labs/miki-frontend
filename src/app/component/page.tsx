@@ -27,7 +27,6 @@ export default function Component() {
           aria-label='Tabs variants'
           selectedKey={selected}
           onSelectionChange={(key) => setSelected(key.toString())}
-          style={{}}
         >
           <Tab key='ETH' title='ETH' />
           <Tab key='USDC' title='USDC' />

@@ -2,7 +2,7 @@ import { Card, CardBody, CardHeader } from '@nextui-org/react'
 
 export default function YourDeposits({ tab }: { tab: string }) {
   return (
-    <Card isBlurred className='border-non miki-dark:bg-gray-700/60 h-[350px] w-[300px] rounded-lg mr-16' shadow='sm'>
+    <Card isBlurred className='border-non dark:bg-gray-700/60 h-[350px] w-[300px] rounded-lg mr-16' shadow='sm'>
       <CardHeader className='pb-0 pt-10 px-4 flex items-center justify-center'>
         <h4 className='text-2xl font-roboto font-normal text-white mx-auto w-max'>Your Deposits</h4>
       </CardHeader>

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en' className='miki-dark'>
+    <html lang='en' className='dark'>
       <body>
         <Providers>
           <Header />

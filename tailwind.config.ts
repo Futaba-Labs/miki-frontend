@@ -18,22 +18,21 @@ const config: Config = {
     },
   },
   darkMode: "class",
-  plugins: [nextui({
-    prefix: "nextui", // prefix for themes variables
-    addCommonColors: false, // override common colors (e.g. "blue", "green", "pink").
-    defaultTheme: "dark", // default theme from the themes object
-    defaultExtendTheme: "dark", // default theme to extend on custom themes
-    layout: {}, // common layout tokens (applied to all themes)
-    themes: {
-      "miki-dark": {
-        extend: "dark", // <- inherit default values from dark theme
-        colors: {
-          // background: "#f5f8fb",
-          // foreground: "#fff",
-          primary: "#6F6FE2",
+  plugins: [
+    nextui({
+      prefix: 'nextui', // prefix for themes variables
+      addCommonColors: true, // override common colors (e.g. "blue", "green", "pink").
+      themes: {
+        light: {},
+        dark: {
+          colors: {
+            // background: "#f5f8fb",
+            // foreground: '#FFFFFF', // or 50 to 900 DEFAULT
+            primary: "#6F6FE2"
+          },
         },
       },
-    },
-  })],
+    }),
+  ],
 };
 export default config;

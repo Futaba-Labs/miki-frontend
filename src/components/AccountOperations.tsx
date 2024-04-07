@@ -27,7 +27,7 @@ export default function AccountOperations({ tab }: { tab: string }) {
   }
 
   return (
-    <Card isBlurred className='border-non miki-dark:bg-gray-700/60 h-[350px] w-[300px] rounded-lg ' shadow='sm'>
+    <Card isBlurred className='border-non dark:bg-gray-700/60 h-[350px] w-[300px] rounded-lg ' shadow='sm'>
       <CardHeader className='pb-0 pt-10 px-4 flex items-center justify-center'>
         {/* Tabs for selecting views */}
         <Tabs

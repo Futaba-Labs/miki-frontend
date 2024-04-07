@@ -23,6 +23,8 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   font-family: 'Helvetica Neue';
+  height: 100vh;
+  background-attachment: fixed;
 }
 
 @layer utilities {
