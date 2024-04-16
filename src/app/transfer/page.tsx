@@ -10,7 +10,7 @@ const steps = [
   },
 ]
 
-export default function Send() {
+export default function Transfer() {
   return (
     <>
       <ChatBot steps={steps} />
