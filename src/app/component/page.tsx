@@ -1,6 +1,6 @@
 'use client'
 
-import { TabTest, AccountOperations, YourDeposits } from '@/components'
+import { TabTest, AccountOperations, DepositCard } from '@/components'
 import { Input, Tab, Tabs } from '@nextui-org/react'
 import { SetStateAction, useState } from 'react'
 
@@ -34,9 +34,7 @@ export default function Component() {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ marginRight: '0px' }}>
-          <YourDeposits tab={selected} />
-        </div>
+        <div style={{ marginRight: '0px' }}>{/* <DepositCard tab={selected} /> */}</div>
         <div style={{ marginLeft: '0px' }}>
           <AccountOperations tab={selected} />
         </div>

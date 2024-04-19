@@ -1,12 +1,13 @@
 import AccountOperations from "./AccountOperations";
-import TabTest from "./TabTest";
 import Header from "./Header";
-import YourDeposits from "./YourDeposits";
+import DepositCard from "./DepositCard";
+import MikiCard from "./MikiCard";
 
 export {
   AccountOperations,
   TabTest,
   Header,
-  YourDeposits
+  DepositCard,
+  MikiCard
 }
 

@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { Card, CardBody, CardHeader, Tabs, Tab, Input, Button } from '@nextui-org/react'
+import MikiCard from './MikiCard'
 
 export default function AccountOperations({ tab }: { tab: string }) {
   const [selected, setSelected] = useState('deposits')
@@ -27,7 +28,7 @@ export default function AccountOperations({ tab }: { tab: string }) {
   }
 
   return (
-    <Card isBlurred className='border-non dark:bg-gray-700/60 h-[350px] w-[300px] rounded-lg ' shadow='sm'>
+    <MikiCard width={300} height={350}>
       <CardHeader className='pb-0 pt-10 px-4 flex items-center justify-center'>
         {/* Tabs for selecting views */}
         <Tabs
@@ -36,13 +37,13 @@ export default function AccountOperations({ tab }: { tab: string }) {
           selectedKey={selected}
           onSelectionChange={(key) => setSelected(key.toString())}
         >
-          <Tab key='deposits' title='Deposits' />
-          <Tab key='withdrawals' title='Withdrawals' />
+          <Tab key='deposit' title='Deposit' />
+          <Tab key='withdraw' title='Withdraw' />
         </Tabs>
       </CardHeader>
 
       <CardBody className='mb-22 mt-6 text-center'>
-        {selected === 'deposits' ? (
+        {selected === 'deposit' ? (
           <div className='flex flex-col items-center w-full'>
             <div style={{ marginTop: '16px' }}></div> {/* 64px margins */}
             <div style={{ width: 'calc(100% - 40px)' }}>
@@ -86,6 +87,6 @@ export default function AccountOperations({ tab }: { tab: string }) {
           </div>
         )}
       </CardBody>
-    </Card>
+    </MikiCard>
   )
 }
