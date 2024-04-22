@@ -2,20 +2,16 @@
 import { useState } from 'react'
 import { Card, CardBody, CardHeader, Tabs, Tab, Input, Button } from '@nextui-org/react'
 import MikiCard from './MikiCard'
+import React from 'react'
 
-export default function TransferCard({ tab }: { tab: string }) {
-  const [selected, setSelected] = useState('deposits')
+type TransferCardProps = {
+  onClick: () => Promise<void>
+  setAmount: (e: React.ChangeEvent<HTMLInputElement>) => void
+  setAddress: (e: React.ChangeEvent<HTMLInputElement>) => void
+  isPending: boolean
+}
 
-  const transfer = () => {
-    if (tab === 'ETH') {
-      // ETHのDeposit処理
-      console.log('ETHをDepositします')
-    } else {
-      // USDCのDeposit処理
-      console.log('USDCをDepositします')
-    }
-  }
-
+const TransferCard = React.memo(({ onClick, setAmount, setAddress, isPending }: TransferCardProps) => {
   return (
     <MikiCard width={300} height={350}>
       <CardHeader className='pb-0 pt-10 px-4 flex-col items-start pl-8'>
@@ -26,26 +22,29 @@ export default function TransferCard({ tab }: { tab: string }) {
         <div className='flex flex-col items-center w-full'>
           <div style={{ marginTop: '16px' }}></div>
           <div style={{ width: 'calc(100% - 40px)' }}>
-            <Input type='number' variant='underlined' label='Amount' min={0} />
+            <Input type='text' variant='underlined' label='Amount' onChange={setAmount} />
           </div>
           <div style={{ width: 'calc(100% - 40px)' }}>
-            <Input type='text' variant='underlined' label='Address' />
+            <Input type='text' variant='underlined' label='Address' onChange={setAddress} />
           </div>
           {/* TODO: Select chain */}
           <div style={{ marginTop: '32px' }}></div>
           <Button
+            isLoading={isPending}
             style={{
               backgroundColor: '#6963AB',
               width: '120px',
               height: '48px',
               color: '#FFFFFF',
             }}
-            onClick={transfer}
+            onClick={onClick}
           >
-            Transfer
+            {isPending ? 'Transfering' : 'Transfer'}
           </Button>
         </div>
       </CardBody>
     </MikiCard>
   )
-}
+})
+
+export default TransferCard

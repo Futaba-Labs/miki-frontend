@@ -1,30 +1,34 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Card, CardBody, CardHeader, Tabs, Tab, Input, Button } from '@nextui-org/react'
 import MikiCard from './MikiCard'
+import { useAccount, useWriteContract } from 'wagmi'
+import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
+import { parseEther } from 'viem'
 
 export default function AccountOperations({ tab }: { tab: string }) {
   const [selected, setSelected] = useState('deposits')
+  const [amount, setAmount] = useState(0)
+
+  const { isConnected } = useAccount()
+  const { writeContract, isPending } = useWriteContract()
 
   const handleDeposit = () => {
-    if (tab === 'ETH') {
-      // ETHのDeposit処理
-      console.log('ETHをDepositします')
-    } else {
-      // USDCのDeposit処理
-      console.log('USDCをDepositします')
+    if (amount === 0) {
+      // TODO: handle error
+      return
     }
+    writeContract({
+      abi: L2_ASSET_MANAGER_ABI,
+      address: DEPLOYMENT.l2AssetManager as `0x${string}`,
+      functionName: 'depositETH',
+      args: [parseEther(amount.toString())],
+      value: parseEther(amount.toString()),
+    })
   }
 
-  // Withdraw関数
   const handleWithdraw = () => {
-    if (tab === 'ETH') {
-      // ETHのWithdraw処理
-      console.log('ETHをWithdrawします')
-    } else {
-      // USDCのWithdraw処理
-      console.log('USDCをWithdrawします')
-    }
+    // TODO: implement
   }
 
   return (
@@ -45,34 +49,36 @@ export default function AccountOperations({ tab }: { tab: string }) {
       <CardBody className='mb-22 mt-6 text-center'>
         {selected === 'deposit' ? (
           <div className='flex flex-col items-center w-full'>
-            <div style={{ marginTop: '16px' }}></div> {/* 64px margins */}
+            <div style={{ marginTop: '16px' }}></div>
             <div style={{ width: 'calc(100% - 40px)' }}>
-              {' '}
-              {/* Input コンポーネントを含む div */}
-              <Input type='number' variant='underlined' label='Amount' min={0} />
+              <Input
+                type='text'
+                variant='underlined'
+                label='Amount'
+                onChange={(e) => setAmount(parseFloat(e.target.value))}
+              />
             </div>
-            <div style={{ marginTop: '64px' }}></div> {/* 64px margins */}
+            <div style={{ marginTop: '64px' }}></div>
             <Button
+              isLoading={isPending}
               style={{
                 backgroundColor: '#6963AB',
                 width: '120px',
                 height: '48px',
                 color: '#FFFFFF',
               }}
-              onClick={handleDeposit}
+              onClick={() => handleDeposit()}
             >
-              Deposit
+              {isPending ? 'Depositing...' : 'Deposit'}
             </Button>
           </div>
         ) : (
           <div className='flex flex-col items-center w-full'>
-            <div style={{ marginTop: '16px' }}></div> {/* 64px margins */}
+            <div style={{ marginTop: '16px' }}></div>
             <div style={{ width: 'calc(100% - 40px)' }}>
-              {' '}
-              {/* Input コンポーネントを含む div */}
               <Input type='number' variant='underlined' label='Amount' min={0} />
             </div>
-            <div style={{ marginTop: '64px' }}></div> {/* 64px margins */}
+            <div style={{ marginTop: '64px' }}></div>
             <Button
               style={{
                 backgroundColor: '#6963AB',

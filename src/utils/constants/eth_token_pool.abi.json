@@ -8,6 +8,17 @@
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
+  {
+    "inputs": [{ "internalType": "address", "name": "target", "type": "address" }],
+    "name": "AddressEmptyCode",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+    "name": "AddressInsufficientBalance",
+    "type": "error"
+  },
+  { "inputs": [], "name": "FailedInnerCall", "type": "error" },
   { "inputs": [], "name": "InsufficientAmount", "type": "error" },
   { "inputs": [], "name": "InsufficientFee", "type": "error" },
   { "inputs": [], "name": "InvalidInitialization", "type": "error" },
@@ -24,6 +35,11 @@
   {
     "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
     "name": "OwnableUnauthorizedAccount",
+    "type": "error"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+    "name": "SafeERC20FailedOperation",
     "type": "error"
   },
   { "inputs": [], "name": "ZeroAddress", "type": "error" },
@@ -56,6 +72,20 @@
       { "indexed": false, "internalType": "address", "name": "recipient", "type": "address" },
       { "indexed": false, "internalType": "bytes", "name": "data", "type": "bytes" },
       { "indexed": false, "internalType": "uint256", "name": "fee", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "relayFee", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "params", "type": "bytes" }
+    ],
+    "name": "CrossChainContractCallRelay",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "sender", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "dstChainId", "type": "uint256" },
+      { "indexed": false, "internalType": "address", "name": "recipient", "type": "address" },
+      { "indexed": false, "internalType": "bytes", "name": "data", "type": "bytes" },
+      { "indexed": false, "internalType": "uint256", "name": "fee", "type": "uint256" },
       { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
     "name": "CrossChainContractCallWithAsset",
@@ -67,9 +97,38 @@
       { "indexed": false, "internalType": "address", "name": "sender", "type": "address" },
       { "indexed": false, "internalType": "uint256", "name": "dstChainId", "type": "uint256" },
       { "indexed": false, "internalType": "address", "name": "recipient", "type": "address" },
+      { "indexed": false, "internalType": "bytes", "name": "data", "type": "bytes" },
+      { "indexed": false, "internalType": "uint256", "name": "fee", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "relayFee", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "params", "type": "bytes" }
+    ],
+    "name": "CrossChainContractCallWithAssetRelay",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "sender", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "dstChainId", "type": "uint256" },
+      { "indexed": false, "internalType": "address", "name": "recipient", "type": "address" },
       { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
     "name": "CrossChainTransferAsset",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "sender", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "dstChainId", "type": "uint256" },
+      { "indexed": false, "internalType": "address", "name": "recipient", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "fee", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "relayFee", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "bytes", "name": "params", "type": "bytes" }
+    ],
+    "name": "CrossChainTransferAssetRelay",
     "type": "event"
   },
   {
@@ -143,10 +202,37 @@
       { "internalType": "address", "name": "recipient", "type": "address" },
       { "internalType": "bytes", "name": "data", "type": "bytes" },
       { "internalType": "uint256", "name": "fee", "type": "uint256" },
+      { "internalType": "bytes", "name": "params", "type": "bytes" }
+    ],
+    "name": "crossChainContractCallRelay",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "dstChainId", "type": "uint256" },
+      { "internalType": "address", "name": "recipient", "type": "address" },
+      { "internalType": "bytes", "name": "data", "type": "bytes" },
+      { "internalType": "uint256", "name": "fee", "type": "uint256" },
       { "internalType": "uint256", "name": "amount", "type": "uint256" },
       { "internalType": "bytes", "name": "params", "type": "bytes" }
     ],
     "name": "crossChainContractCallWithAsset",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "dstChainId", "type": "uint256" },
+      { "internalType": "address", "name": "recipient", "type": "address" },
+      { "internalType": "bytes", "name": "data", "type": "bytes" },
+      { "internalType": "uint256", "name": "fee", "type": "uint256" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "bytes", "name": "params", "type": "bytes" }
+    ],
+    "name": "crossChainContractCallWithAssetRelay",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
@@ -170,6 +256,19 @@
       { "internalType": "bytes", "name": "params", "type": "bytes" }
     ],
     "name": "crossChainTransferAsset",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "dstChainId", "type": "uint256" },
+      { "internalType": "address", "name": "recipient", "type": "address" },
+      { "internalType": "uint256", "name": "fee", "type": "uint256" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "bytes", "name": "params", "type": "bytes" }
+    ],
+    "name": "crossChainTransferAssetRelay",
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
