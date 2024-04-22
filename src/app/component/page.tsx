@@ -1,6 +1,6 @@
 'use client'
 
-import { TabTest, AccountOperations, DepositCard } from '@/components'
+import { AccountOperations, DepositCard } from '@/components'
 import { Input, Tab, Tabs } from '@nextui-org/react'
 import { SetStateAction, useState } from 'react'
 

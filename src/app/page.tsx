@@ -2,6 +2,7 @@
 
 import { DepositCard, MikiCard } from '@/components'
 import { Card, CardHeader, CardBody } from '@nextui-org/react'
+import { useAccount } from 'wagmi'
 
 export default function Home() {
   return (
