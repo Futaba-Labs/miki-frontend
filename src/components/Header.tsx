@@ -10,7 +10,7 @@ export default function Header() {
     <Navbar height={74} className='bg-white' maxWidth='full'>
       <NavbarBrand className=''>
         <Link href='/' as={NextLink}>
-          <Image height={56} width={115} src={'/miki_logo.png'} alt='miki_logo' />
+          <Image height={56} width={115} src={'/logo/miki.png'} alt='miki_logo' />
         </Link>
       </NavbarBrand>
       <NavbarContent className='hidden sm:flex gap-x-11' justify='center'>
