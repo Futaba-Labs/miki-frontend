@@ -1,22 +1,22 @@
 'use client'
 
-import { Card, CardBody, CardHeader } from '@nextui-org/react'
+import { AccountOperations, DepositCard, MikiCard } from '@/components'
+import { CardBody, CardHeader } from '@nextui-org/react'
+import { useState } from 'react'
 
 export default function Deposit() {
+  const [tab, setTab] = useState('ETH')
+
   return (
     <>
-      <Card isBlurred className='border-none bg-white dark:bg-gray-700/60 h-[400px] w-[300px] mr-16' shadow='sm'>
-        <CardHeader className='pb-0 pt-10 px-4 flex-col items-start'>
-          <h4 className='text-2xl font-roboto font-normal text-white'>Deposit Assets</h4>
-        </CardHeader>
-
-        <CardBody className='mb-22 mt-6'>
-          <div className='flex items-baseline mb-1'>
-            <h4 className='font-roboto font-semibold text-white text-[100px] mr-2'>1.24</h4>
-            <p className='text-[18px] font-roboto font-semibold text-gray-400'>ETH</p>
-          </div>
-        </CardBody>
-      </Card>
+      <div className='grid lg:grid-cols-12 content-center h-[calc(100vh-74px)] gap-x-24 lg:grid-flow-row'>
+        <div className='col-start-4 col-end-7 h-[350px]'>
+          <DepositCard tab={tab} width={300} height={350} />
+        </div>
+        <div className='col-start-7 col-end-10 h-[350px]'>
+          <AccountOperations tab={tab} />
+        </div>
+      </div>
     </>
   )
 }
