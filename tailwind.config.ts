@@ -28,6 +28,9 @@ const config: Config = {
       },
       backgroundColor: {
         "button": "#F5F5F5"
+      },
+      width: {
+        '128': '32rem',
       }
     },
   },

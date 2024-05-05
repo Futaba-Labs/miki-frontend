@@ -1,7 +1,8 @@
 'use client'
-import { CardBody, CardHeader, Input, Button } from '@nextui-org/react'
-import React from 'react'
+import { CardBody, CardHeader, Input, Button, Select, SelectItem } from '@nextui-org/react'
+import React, { useMemo, useState } from 'react'
 import MikiCard from './MikiCard'
+import Image from 'next/image'
 
 type TransferCardProps = {
   onClick: () => Promise<void>
@@ -11,37 +12,117 @@ type TransferCardProps = {
 }
 
 const TransferCard = React.memo(({ onClick, setAmount, setAddress, isPending }: TransferCardProps) => {
-  return (
-    <MikiCard width={300} height={350}>
-      <CardHeader className='pb-0 pt-10 px-4 flex-col items-start pl-8'>
-        <h4 className='text-2xl font-roboto font-normal text-white'>Transfer</h4>
-      </CardHeader>
+  const tokens = [
+    { key: 'Optimism', value: 'optimism', chainId: 1 },
+    { key: 'Base', value: 'base', chainId: 8453 },
+  ]
+  const [selected, setSelected] = useState<any>(new Set(['Select Chain']))
+  const selectedValue = useMemo(() => {
+    const value = Array.from(selected).join(', ').replaceAll('_', ' ')
+    return value
+  }, [selected])
 
-      <CardBody className='mb-22 mt-6 text-center'>
-        <div className='flex flex-col items-center w-full'>
-          <div style={{ marginTop: '16px' }}></div>
-          <div style={{ width: 'calc(100% - 40px)' }}>
-            <Input type='text' variant='underlined' label='Amount' onChange={setAmount} />
-          </div>
-          <div style={{ width: 'calc(100% - 40px)' }}>
-            <Input type='text' variant='underlined' label='Address' onChange={setAddress} />
-          </div>
-          {/* TODO: Select chain */}
-          <div style={{ marginTop: '32px' }}></div>
-          <Button
-            isLoading={isPending}
-            style={{
-              backgroundColor: '#6963AB',
-              width: '120px',
-              height: '48px',
-              color: '#FFFFFF',
+  return (
+    <MikiCard width={300} height={300}>
+      <div className='flex justify-between items-center px-8 py-8'>
+        <span className='font-bold text-black text-xl'>Transfer</span>
+
+        <div className='flex flex-col items-end w-full gap-4'>
+          <Input
+            type='text'
+            label='Amount'
+            labelPlacement='outside'
+            placeholder='0.01'
+            radius='sm'
+            className='w-128'
+            classNames={{
+              label: 'text-black text-sm',
+              input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
+              inputWrapper: [
+                'shadow-inner',
+                'bg-default-200/50',
+                'dark:bg-default/60',
+                'backdrop-blur-xl',
+                'backdrop-saturate-200',
+                'hover:bg-default-200/70',
+                'dark:hover:bg-default/70',
+                'group-data-[focused=true]:bg-default-200/50',
+                'dark:group-data-[focused=true]:bg-default/60',
+                '!cursor-text',
+              ],
             }}
-            onClick={onClick}
+            onChange={setAmount}
+          />
+          <Input
+            type='text'
+            label='Address'
+            labelPlacement='outside'
+            placeholder='0x...'
+            radius='sm'
+            className='w-128'
+            classNames={{
+              label: 'text-black text-sm',
+              input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
+              inputWrapper: [
+                'shadow-inner',
+                'bg-default-200/50',
+                'dark:bg-default/60',
+                'backdrop-blur-xl',
+                'backdrop-saturate-200',
+                'hover:bg-default-200/70',
+                'dark:hover:bg-default/70',
+                'group-data-[focused=true]:bg-default-200/50',
+                'dark:group-data-[focused=true]:bg-default/60',
+                '!cursor-text',
+              ],
+            }}
+            onChange={setAddress}
+          />
+          <Select
+            items={tokens}
+            defaultSelectedKeys={['ETH']}
+            className='text-green w-128'
+            radius='sm'
+            onSelectionChange={setSelected}
+            labelPlacement='outside'
+            label='Chain'
+            placeholder='Select chain'
+            startContent={
+              selectedValue !== '' &&
+              selectedValue !== 'Select Chain' && (
+                <Image src={`/logo/${selectedValue}.svg`} width={25} height={25} alt={selectedValue} />
+              )
+            }
+            renderValue={(items) => {
+              if (selectedValue === 'Select Chain') {
+                return <p className='text-green pl-1 font-bold text-lg'>Select Chain</p>
+              }
+              return items.map((item) => <p className='text-green pl-1 font-bold text-lg'>{item.key!.toString()}</p>)
+            }}
           >
-            {isPending ? 'Transfering' : 'Transfer'}
-          </Button>
+            {tokens.map((token) => (
+              <SelectItem
+                key={token.key}
+                value={token.value}
+                startContent={<Image src={`/logo/${token.value}.svg`} width={25} height={25} alt={token.value} />}
+              >
+                <span className='text-black'>{token.key}</span>
+              </SelectItem>
+            ))}
+          </Select>
+          <div className='flex justify-center w-128'>
+            <Button
+              isLoading={isPending}
+              radius='sm'
+              onClick={onClick}
+              startContent={!isPending ? <Image src={'/icon/send.svg'} width={24} height={24} alt='send' /> : null}
+              className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+            >
+              <span className='text-green font-bold text-lg'>{isPending ? 'Sending...' : 'Send'}</span>
+            </Button>
+          </div>
         </div>
-      </CardBody>
+      </div>
     </MikiCard>
   )
 })

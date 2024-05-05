@@ -36,10 +36,9 @@ export default function AccountOperations({ tab }: { tab: string }) {
     <MikiCard width={300} height={300}>
       <div className='flex justify-between items-center px-8 py-10'>
         <span className='font-bold text-black text-xl'>Add Funds</span>
-        <div className='mb-22 mt-6 text-center'>
+        <div className=''>
           {selected === 'deposits' ? (
             <div className='flex items-end gap-2 w-full'>
-              <div style={{ marginTop: '16px' }}></div>
               <div>
                 <Input
                   type='text'

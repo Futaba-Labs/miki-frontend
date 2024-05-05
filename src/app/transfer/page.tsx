@@ -1,6 +1,7 @@
 'use client'
+
 import 'viem/window'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { GelatoRelay, CallWithSyncFeeERC2771Request } from '@gelatonetwork/relay-sdk'
 import { createPublicClient, encodeAbiParameters, encodeFunctionData, http, parseEther } from 'viem'
@@ -9,13 +10,23 @@ import { arbitrumSepolia } from 'viem/chains'
 import { ethers } from 'ethers'
 import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI, EXAMPLE_DEPLOYMENT } from '@/utils'
 import { DepositCard, TransferCard } from '@/components'
+import { Select, SelectItem } from '@nextui-org/react'
+import Image from 'next/image'
 
 export default function Transfer() {
-  const [selected, setSelected] = useState('ETH')
   const [amount, setAmount] = useState(0)
   const [recipient, setRecipient] = useState<`0x${string}`>('0x')
   const [chainId, setChainId] = useState(84532)
   const [loading, setLoading] = useState(false)
+  const tokens = [
+    { key: 'ETH', value: 'ETH' },
+    { key: 'USDC', value: 'USDC' },
+  ]
+  const [selected, setSelected] = useState<any>(new Set(['ETH']))
+  const selectedValue = useMemo(() => {
+    const value = Array.from(selected).join(', ').replaceAll('_', ' ')
+    return value
+  }, [selected])
 
   const { address } = useAccount()
 
@@ -86,10 +97,45 @@ export default function Transfer() {
   }
 
   return (
-    <div className='grid lg:grid-cols-12 content-center h-[calc(100vh-74px)] gap-x-24 lg:grid-flow-row'>
-      <div className='col-start-4 col-end-7 h-[350px]'>
-        <DepositCard tab={selected} width={300} height={350} />
+    <div className='flex flex-col w-9/12 mx-auto gap-8 pt-8'>
+      <div className='flex justify-end drop-shadow-custom'>
+        <Select
+          items={tokens}
+          defaultSelectedKeys={['ETH']}
+          className='text-green w-36'
+          radius='sm'
+          onSelectionChange={setSelected}
+          startContent={
+            selectedValue === 'ETH' ? (
+              <Image src={'/logo/ethereum.svg'} width={15} height={15} alt='ETH' />
+            ) : (
+              <Image src={'/logo/usdc.svg'} width={25} height={25} alt='USDC' />
+            )
+          }
+          renderValue={(items) => {
+            console.log(items)
+            return items.map((item) => <p className='text-green pl-1 font-bold text-lg'>{item.key!.toString()}</p>)
+          }}
+        >
+          {tokens.map((token) => (
+            <SelectItem
+              key={token.key}
+              value={token.value}
+              startContent={
+                token.value === 'ETH' ? (
+                  <Image src={'/logo/ethereum.svg'} width={15} height={15} alt='ETH' />
+                ) : (
+                  <Image src={'/logo/usdc.svg'} width={15} height={15} alt='USDC' />
+                )
+              }
+            >
+              <span className='text-black'>{token.value}</span>
+            </SelectItem>
+          ))}
+        </Select>
       </div>
+      <DepositCard tab={selectedValue} width={300} height={300} />
+
       <div className='col-start-7 col-end-10 h-[350px]'>
         <TransferCard
           onClick={transfer}
