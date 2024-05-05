@@ -19,12 +19,16 @@ const config: Config = {
         inner: "inset 5px 5px 10px 0 rgba(166, 180, 200, 0.75), inset -5px -5px 15px 0 rgba(255, 255, 255, 0.75)",
       },
       dropShadow: {
-        "custom": "4px 4px 6px rgba(171, 194, 212, 0.6), -4px -4px 6px rgba(255, 255, 255, 0.5)",
+        "custom": ["4px 4px 6px rgba(171, 194, 212, 0.6)", "-4px -4px 6px rgba(255, 255, 255, 0.5)"],
+        "button": ["4px 2px 16px rgba(67, 236, 172, 0.48)", "-4px -2px 16px #fff"]
       },
       textColor: {
         "black": "#333",
         "green": "#1F8506"
       },
+      backgroundColor: {
+        "button": "#F5F5F5"
+      }
     },
   },
   darkMode: "class",
