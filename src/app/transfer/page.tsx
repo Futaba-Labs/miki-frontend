@@ -1,14 +1,14 @@
 'use client'
 import 'viem/window'
-import { DepositCard, TransferCard } from '@/components'
 import { useCallback, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { GelatoRelay, CallWithSyncFeeERC2771Request } from '@gelatonetwork/relay-sdk'
 import { createPublicClient, encodeAbiParameters, encodeFunctionData, http, parseEther } from 'viem'
-import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI, EXAMPLE_DEPLOYMENT } from '@/utils'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { arbitrumSepolia } from 'viem/chains'
 import { ethers } from 'ethers'
+import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI, EXAMPLE_DEPLOYMENT } from '@/utils'
+import { DepositCard, TransferCard } from '@/components'
 
 export default function Transfer() {
   const [selected, setSelected] = useState('ETH')
@@ -79,7 +79,7 @@ export default function Transfer() {
         undefined,
         'VII4NZAvrsnNLdnmuVjPfG8G_qyN2WtgzBIWp5_HlAk_',
       )
-      let taskId = relayResponse.taskId
+      const taskId = relayResponse.taskId
       console.log(`https://relay.gelato.digital/tasks/status/${taskId}`)
       setLoading(false)
     })

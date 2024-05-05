@@ -1,8 +1,7 @@
 'use client'
-import { useState } from 'react'
-import { Card, CardBody, CardHeader, Tabs, Tab, Input, Button } from '@nextui-org/react'
-import MikiCard from './MikiCard'
+import { CardBody, CardHeader, Input, Button } from '@nextui-org/react'
 import React from 'react'
+import MikiCard from './MikiCard'
 
 type TransferCardProps = {
   onClick: () => Promise<void>

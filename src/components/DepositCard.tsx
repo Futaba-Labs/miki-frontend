@@ -1,11 +1,11 @@
 'use client'
 
-import MikiCard from './MikiCard'
 import { useAccount, useReadContract } from 'wagmi'
 import { useEffect, useState } from 'react'
-import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
 import { formatEther } from 'viem'
+import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
 import { roundedNumber } from '@/utils/helper'
+import MikiCard from './MikiCard'
 
 type DepositCardProps = {
   width: number

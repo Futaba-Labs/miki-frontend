@@ -30,11 +30,5 @@ module.exports = {
       },
     ],
   },
-  'import/no-extraneous-dependencies': [
-    'error',
-    {
-      packageDir: ['./', './node_modules/@nextui-org/react'],
-    },
-  ],
   ignorePatterns: ['tailwind.config.js', '.eslintrc.js', 'postcss.config.js', 'next.confog.js'],
 }

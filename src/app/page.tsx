@@ -1,9 +1,9 @@
 'use client'
 
-import { DepositCard, MikiCard } from '@/components'
 import { Select, SelectItem } from '@nextui-org/react'
 import { useState, useMemo } from 'react'
 import Image from 'next/image'
+import { DepositCard, MikiCard } from '@/components'
 
 export default function Home() {
   const tokens = [

@@ -1,8 +1,7 @@
 'use client'
 
-import { AccountOperations, DepositCard, MikiCard } from '@/components'
-import { CardBody, CardHeader } from '@nextui-org/react'
 import { useState } from 'react'
+import { AccountOperations, DepositCard } from '@/components'
 
 export default function Deposit() {
   const [tab, setTab] = useState('ETH')
