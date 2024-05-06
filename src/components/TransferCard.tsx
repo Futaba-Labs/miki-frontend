@@ -1,8 +1,8 @@
 'use client'
-import { CardBody, CardHeader, Input, Button, Select, SelectItem } from '@nextui-org/react'
+import { Input, Button, Select, SelectItem } from '@nextui-org/react'
 import React, { useMemo, useState } from 'react'
-import MikiCard from './MikiCard'
 import Image from 'next/image'
+import MikiCard from './MikiCard'
 
 type TransferCardProps = {
   onClick: () => Promise<void>
@@ -11,11 +11,14 @@ type TransferCardProps = {
   isPending: boolean
 }
 
+/* eslint-disable  react/display-name */
 const TransferCard = React.memo(({ onClick, setAmount, setAddress, isPending }: TransferCardProps) => {
   const tokens = [
     { key: 'Optimism', value: 'optimism', chainId: 1 },
     { key: 'Base', value: 'base', chainId: 8453 },
   ]
+
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [selected, setSelected] = useState<any>(new Set(['Select Chain']))
   const selectedValue = useMemo(() => {
     const value = Array.from(selected).join(', ').replaceAll('_', ' ')
@@ -97,7 +100,11 @@ const TransferCard = React.memo(({ onClick, setAmount, setAddress, isPending }: 
               if (selectedValue === 'Select Chain') {
                 return <p className='text-green pl-1 font-bold text-lg'>Select Chain</p>
               }
-              return items.map((item) => <p className='text-green pl-1 font-bold text-lg'>{item.key!.toString()}</p>)
+              return items.map((item) => (
+                <p key={item.key} className='text-green pl-1 font-bold text-lg'>
+                  {item.key!.toString()}
+                </p>
+              ))
             }}
           >
             {tokens.map((token) => (

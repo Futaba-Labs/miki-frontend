@@ -1,11 +1,11 @@
 'use client'
 import { useState } from 'react'
-import { CardBody, CardHeader, Tabs, Tab, Input, Button } from '@nextui-org/react'
+import { Input, Button } from '@nextui-org/react'
 import { useAccount, useWriteContract } from 'wagmi'
 import { parseEther } from 'viem'
+import Image from 'next/image'
 import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
 import MikiCard from './MikiCard'
-import Image from 'next/image'
 
 export default function AccountOperations({ tab }: { tab: string }) {
   const [selected, setSelected] = useState('deposits')

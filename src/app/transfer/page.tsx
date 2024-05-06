@@ -8,10 +8,10 @@ import { createPublicClient, encodeAbiParameters, encodeFunctionData, http, pars
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { arbitrumSepolia } from 'viem/chains'
 import { ethers } from 'ethers'
-import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI, EXAMPLE_DEPLOYMENT } from '@/utils'
-import { DepositCard, TransferCard } from '@/components'
 import { Select, SelectItem } from '@nextui-org/react'
 import Image from 'next/image'
+import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI, EXAMPLE_DEPLOYMENT } from '@/utils'
+import { DepositCard, TransferCard } from '@/components'
 
 export default function Transfer() {
   const [amount, setAmount] = useState(0)
@@ -22,6 +22,8 @@ export default function Transfer() {
     { key: 'ETH', value: 'ETH' },
     { key: 'USDC', value: 'USDC' },
   ]
+
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [selected, setSelected] = useState<any>(new Set(['ETH']))
   const selectedValue = useMemo(() => {
     const value = Array.from(selected).join(', ').replaceAll('_', ' ')
@@ -46,8 +48,10 @@ export default function Transfer() {
     [setRecipient],
   )
 
-  const transfer = async () => {
+  const transfer = () => {
     setLoading(true)
+
+    /* eslint-disable no-async-promise-executor */
     return new Promise<void>(async (resolve, reject) => {
       const parsedAmount = parseEther(amount.toString())
       const encodedRecipient = encodeAbiParameters([{ type: 'address', name: 'recipient' }], [recipient])
@@ -113,8 +117,11 @@ export default function Transfer() {
             )
           }
           renderValue={(items) => {
-            console.log(items)
-            return items.map((item) => <p className='text-green pl-1 font-bold text-lg'>{item.key!.toString()}</p>)
+            return items.map((item) => (
+              <p key={item.key} className='text-green pl-1 font-bold text-lg'>
+                {item.key!.toString()}
+              </p>
+            ))
           }}
         >
           {tokens.map((token) => (

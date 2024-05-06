@@ -10,6 +10,8 @@ export default function Home() {
     { key: 'ETH', value: 'ETH' },
     { key: 'USDC', value: 'USDC' },
   ]
+
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [selected, setSelected] = useState<any>(new Set(['ETH']))
   const selectedValue = useMemo(() => {
     const value = Array.from(selected).join(', ').replaceAll('_', ' ')
@@ -34,7 +36,11 @@ export default function Home() {
           }
           renderValue={(items) => {
             console.log(items)
-            return items.map((item) => <p className='text-green pl-1 font-bold text-lg'>{item.key!.toString()}</p>)
+            return items.map((item) => (
+              <p key={item.key} className='text-green pl-1 font-bold text-lg'>
+                {item.key!.toString()}
+              </p>
+            ))
           }}
         >
           {tokens.map((token) => (

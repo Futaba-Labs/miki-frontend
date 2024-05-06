@@ -1,15 +1,17 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { AccountOperations, DepositCard, MikiCard } from '@/components'
 import { Select, SelectItem } from '@nextui-org/react'
 import Image from 'next/image'
+import { AccountOperations, DepositCard } from '@/components'
 
 export default function Deposit() {
   const tokens = [
     { key: 'ETH', value: 'ETH' },
     { key: 'USDC', value: 'USDC' },
   ]
+
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [selected, setSelected] = useState<any>(new Set(['ETH']))
   const selectedValue = useMemo(() => {
     const value = Array.from(selected).join(', ').replaceAll('_', ' ')
@@ -33,8 +35,11 @@ export default function Deposit() {
             )
           }
           renderValue={(items) => {
-            console.log(items)
-            return items.map((item) => <p className='text-green pl-1 font-bold text-lg'>{item.key!.toString()}</p>)
+            return items.map((item) => (
+              <p key={item.key} className='text-green pl-1 font-bold text-lg'>
+                {item.key!.toString()}
+              </p>
+            ))
           }}
         >
           {tokens.map((token) => (

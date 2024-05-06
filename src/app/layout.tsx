@@ -1,8 +1,8 @@
-import type { Metadata } from 'next'
-import './globals.css'
-import { Providers } from './providers'
-import '@rainbow-me/rainbowkit/styles.css'
 import Header from '@/components/Header'
+import { Providers } from './providers'
+import './globals.css'
+import '@rainbow-me/rainbowkit/styles.css'
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
