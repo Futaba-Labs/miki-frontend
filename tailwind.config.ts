@@ -1,5 +1,5 @@
-import type { Config } from "tailwindcss";
 import { nextui } from "@nextui-org/react";
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
@@ -20,7 +20,8 @@ const config: Config = {
       },
       dropShadow: {
         "custom": ["4px 4px 6px rgba(171, 194, 212, 0.6)", "-4px -4px 6px rgba(255, 255, 255, 0.5)"],
-        "button": ["4px 2px 16px rgba(67, 236, 172, 0.48)", "-4px -2px 16px #fff"]
+        "button": ["4px 2px 16px rgba(67, 236, 172, 0.48)", "-4px -2px 16px #fff"],
+        "wallet": ["5px 5px 20px rgba(166, 180, 200, 0.7)", "-12px -12px 20px rgba(255, 255, 255, 0.97)"]
       },
       textColor: {
         "black": "#333",
