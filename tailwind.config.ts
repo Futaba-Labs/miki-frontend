@@ -15,6 +15,23 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      boxShadow: {
+        inner: "inset 5px 5px 10px 0 rgba(166, 180, 200, 0.75), inset -5px -5px 15px 0 rgba(255, 255, 255, 0.75)",
+      },
+      dropShadow: {
+        "custom": ["4px 4px 6px rgba(171, 194, 212, 0.6)", "-4px -4px 6px rgba(255, 255, 255, 0.5)"],
+        "button": ["4px 2px 16px rgba(67, 236, 172, 0.48)", "-4px -2px 16px #fff"]
+      },
+      textColor: {
+        "black": "#333",
+        "green": "#1F8506"
+      },
+      backgroundColor: {
+        "button": "#F5F5F5"
+      },
+      width: {
+        '128': '32rem',
+      }
     },
   },
   darkMode: "class",
@@ -23,7 +40,9 @@ const config: Config = {
       prefix: 'nextui', // prefix for themes variables
       addCommonColors: true, // override common colors (e.g. "blue", "green", "pink").
       themes: {
-        light: {},
+        light: {
+
+        },
         dark: {
           colors: {
             // background: "#f5f8fb",

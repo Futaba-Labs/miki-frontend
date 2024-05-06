@@ -1,8 +1,8 @@
 'use client'
 
-import { AccountOperations, DepositCard } from '@/components'
-import { Input, Tab, Tabs } from '@nextui-org/react'
-import { SetStateAction, useState } from 'react'
+import { Tab, Tabs } from '@nextui-org/react'
+import { useState } from 'react'
+import { AccountOperations } from '@/components'
 
 export default function Component() {
   /* タブでETHとUSDCを分け、それに応じてAccountOperations.tsxとYourDepositsのtxボタンを切り替えてます
