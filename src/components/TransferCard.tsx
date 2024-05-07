@@ -210,7 +210,7 @@ export default function TransferCard() {
             startContent={
               selectedValue !== '' &&
               selectedValue !== 'Select Chain' && (
-                <Image src={`/logo/${selectedValue}.svg`} width={25} height={25} alt={selectedValue} />
+                <Image src={`/logo/${selectedValue.toLowerCase()}.svg`} width={25} height={25} alt={selectedValue} />
               )
             }
             renderValue={(items) => {
