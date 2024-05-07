@@ -1,13 +1,13 @@
 'use client'
 
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link } from '@nextui-org/react'
 import Image from 'next/image'
 import NextLink from 'next/link'
+import { CustomConnectButton } from '.'
 
 export default function Header() {
   return (
-    <Navbar height={74} className='bg-white' maxWidth='full'>
+    <Navbar height={80} className='bg-white' maxWidth='full'>
       <NavbarBrand className=''>
         <Link href='/' as={NextLink}>
           <Image height={56} width={115} src={'/logo/miki.png'} alt='miki_logo' />
@@ -37,7 +37,7 @@ export default function Header() {
       </NavbarContent>
       <NavbarContent justify='end'>
         <NavbarItem>
-          <ConnectButton />
+          <CustomConnectButton />
         </NavbarItem>
       </NavbarContent>
     </Navbar>

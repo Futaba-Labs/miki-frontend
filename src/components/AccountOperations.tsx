@@ -1,22 +1,25 @@
 'use client'
-import { useState } from 'react'
-import { Input, Button } from '@nextui-org/react'
+import { useState, useEffect } from 'react'
+import { Input, Button, Link } from '@nextui-org/react'
 import { useAccount, useWriteContract } from 'wagmi'
 import { parseEther } from 'viem'
 import Image from 'next/image'
+import { toast } from 'react-toastify'
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
 import MikiCard from './MikiCard'
 
-export default function AccountOperations({ tab }: { tab: string }) {
+export default function AccountOperations() {
   const [selected, setSelected] = useState('deposits')
   const [amount, setAmount] = useState(0)
 
   const { isConnected } = useAccount()
-  const { writeContract, isPending } = useWriteContract()
+  const { writeContract, isPending, isSuccess, isError, data } = useWriteContract()
+  const addRecentTransaction = useAddRecentTransaction()
 
   const handleDeposit = () => {
     if (amount === 0) {
-      // TODO: handle error
+      toast.error('Amount must be greater than 0', { position: 'bottom-right' })
       return
     }
     writeContract({
@@ -31,6 +34,31 @@ export default function AccountOperations({ tab }: { tab: string }) {
   const handleWithdraw = () => {
     // TODO: implement
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      if (data) {
+        addRecentTransaction({
+          hash: data,
+          description: 'Deposit ETH',
+        })
+        toast.success(
+          <>
+            <p>Deposit successful!</p>
+            {'View on'}
+            <Link isExternal isBlock showAnchorIcon href={`https://sepolia.arbiscan.io/tx/${data}`}>
+              Arbiscan
+            </Link>
+          </>,
+          { position: 'bottom-right' },
+        )
+      } else {
+        toast.success('Deposit successful!', { position: 'bottom-right' })
+      }
+    } else if (isError) {
+      toast.error('Deposit failed', { position: 'bottom-right' })
+    }
+  }, [isSuccess, isError])
 
   return (
     <MikiCard width={300} height={300}>
