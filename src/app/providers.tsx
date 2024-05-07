@@ -31,7 +31,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <NextUIProvider>
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider>{children}</RainbowKitProvider>
+          <RainbowKitProvider showRecentTransactions={true}>{children}</RainbowKitProvider>
         </QueryClientProvider>
       </WagmiProvider>
     </NextUIProvider>

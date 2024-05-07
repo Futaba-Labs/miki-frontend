@@ -1,12 +1,13 @@
 'use client'
 
 import 'viem/window'
-import { Input, Button, Select, SelectItem } from '@nextui-org/react'
+import { Input, Button, Select, SelectItem, Link } from '@nextui-org/react'
 import React, { useCallback, useMemo, useState } from 'react'
 import Image from 'next/image'
-import { GelatoRelay, CallWithSyncFeeERC2771Request } from '@gelatonetwork/relay-sdk'
+import { GelatoRelay, CallWithSyncFeeERC2771Request, TaskState } from '@gelatonetwork/relay-sdk'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { ethers } from 'ethers'
+import { toast } from 'react-toastify'
 import { createPublicClient, http, parseEther, encodeAbiParameters, encodeFunctionData } from 'viem'
 import { arbitrumSepolia } from 'viem/chains'
 import { useAccount } from 'wagmi'
@@ -91,15 +92,52 @@ export default function TransferCard() {
 
       const provider = new ethers.BrowserProvider(window.ethereum!)
 
-      const relayResponse = await relay.callWithSyncFeeERC2771(
-        request,
-        provider,
-        undefined,
-        'VII4NZAvrsnNLdnmuVjPfG8G_qyN2WtgzBIWp5_HlAk_',
-      )
-      const taskId = relayResponse.taskId
-      console.log(`https://relay.gelato.digital/tasks/status/${taskId}`)
-      setLoading(false)
+      let taskId = ''
+      try {
+        const relayResponse = await relay.callWithSyncFeeERC2771(request, provider, undefined)
+        taskId = relayResponse.taskId
+      } catch (error) {
+        toast.error('Transfer failed', { position: 'bottom-right' })
+        return
+      }
+
+      let retry = 0
+      const intervalId = setInterval(async () => {
+        const status = await relay.getTaskStatus(taskId)
+        if (status?.taskState === TaskState.ExecSuccess) {
+          toast.success(
+            <>
+              <p>Transfer successful!</p>
+              {'View on'}
+              <Link
+                isExternal
+                isBlock
+                showAnchorIcon
+                href={`https://testnet.layerzeroscan.com/tx/${status.transactionHash}`}
+              >
+                LayerZero scan
+              </Link>
+            </>,
+            { position: 'bottom-right' },
+          )
+          setLoading(false)
+          clearInterval(intervalId)
+        }
+
+        if (status?.taskState === TaskState.ExecReverted || status?.taskState === TaskState.Cancelled) {
+          toast.error('Transfer failed', { position: 'bottom-right' })
+          setLoading(false)
+          clearInterval(intervalId)
+        }
+
+        if (retry > 5) {
+          toast.error('Timeout', { position: 'bottom-right' })
+          setLoading(false)
+          clearInterval(intervalId)
+        }
+
+        retry++
+      }, 3000)
     })
   }
 

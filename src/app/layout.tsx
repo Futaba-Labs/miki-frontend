@@ -1,7 +1,9 @@
+import { ToastContainer } from 'react-toastify'
 import Header from '@/components/Header'
 import { Providers } from './providers'
 import './globals.css'
 import '@rainbow-me/rainbowkit/styles.css'
+import 'react-toastify/dist/ReactToastify.css'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -19,6 +21,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         <Providers>
           <Header />
           {children}
+          <ToastContainer />
         </Providers>
       </body>
     </html>
