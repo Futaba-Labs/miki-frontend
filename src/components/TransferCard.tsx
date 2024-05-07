@@ -98,6 +98,7 @@ export default function TransferCard() {
         taskId = relayResponse.taskId
       } catch (error) {
         toast.error('Transfer failed', { position: 'bottom-right' })
+        setLoading(false)
         return
       }
 
