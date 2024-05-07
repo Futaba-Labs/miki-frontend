@@ -1,18 +1,20 @@
 'use client'
+
+import 'viem/window'
 import { Input, Button, Select, SelectItem } from '@nextui-org/react'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import Image from 'next/image'
+import { GelatoRelay, CallWithSyncFeeERC2771Request } from '@gelatonetwork/relay-sdk'
+import { Options } from '@layerzerolabs/lz-v2-utilities'
+import { ethers } from 'ethers'
+import { createPublicClient, http, parseEther, encodeAbiParameters, encodeFunctionData } from 'viem'
+import { arbitrumSepolia } from 'viem/chains'
+import { useAccount } from 'wagmi'
+import { EXAMPLE_DEPLOYMENT, DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI } from '@/utils'
 import MikiCard from './MikiCard'
 
-type TransferCardProps = {
-  onClick: () => Promise<void>
-  setAmount: (e: React.ChangeEvent<HTMLInputElement>) => void
-  setAddress: (e: React.ChangeEvent<HTMLInputElement>) => void
-  isPending: boolean
-}
-
 /* eslint-disable  react/display-name */
-const TransferCard = React.memo(({ onClick, setAmount, setAddress, isPending }: TransferCardProps) => {
+export default function TransferCard() {
   const tokens = [
     { key: 'Optimism', value: 'optimism', chainId: 1 },
     { key: 'Base', value: 'base', chainId: 8453 },
@@ -20,10 +22,86 @@ const TransferCard = React.memo(({ onClick, setAmount, setAddress, isPending }: 
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [selected, setSelected] = useState<any>(new Set(['Select Chain']))
+  const [amount, setAmount] = useState(0)
+  const [recipient, setRecipient] = useState<`0x${string}`>('0x')
+  const [chainId, setChainId] = useState(84532)
+  const [loading, setLoading] = useState(false)
+
   const selectedValue = useMemo(() => {
     const value = Array.from(selected).join(', ').replaceAll('_', ' ')
     return value
   }, [selected])
+
+  const { address } = useAccount()
+
+  const client = createPublicClient({
+    chain: arbitrumSepolia,
+    transport: http(),
+  })
+  const relay = new GelatoRelay()
+
+  const handleSetAmount = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => setAmount(parseFloat(e.target.value)),
+    [setAmount],
+  )
+
+  const handleSetAddress = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => setRecipient(e.target.value as `0x${string}`),
+    [setRecipient],
+  )
+
+  const transfer = () => {
+    setLoading(true)
+
+    /* eslint-disable no-async-promise-executor */
+    return new Promise<void>(async (resolve, reject) => {
+      const parsedAmount = parseEther(amount.toString())
+      const encodedRecipient = encodeAbiParameters([{ type: 'address', name: 'recipient' }], [recipient])
+      const _options = Options.newOptions().addExecutorLzReceiveOption(1000000, 0)
+      const params = encodeAbiParameters(
+        [
+          { type: 'bytes', name: 'options' },
+          { type: 'bytes', name: 'sgParams' },
+        ],
+        [_options.toHex() as `0x${string}`, '0x0'],
+      )
+      const nft = EXAMPLE_DEPLOYMENT[chainId.toString()].nft
+
+      const fee = await client.readContract({
+        address: DEPLOYMENT.ethAdapter as `0x${string}`,
+        abi: ETH_ADAPTER_ABI,
+        functionName: 'estimateFee',
+        args: [address, chainId, nft, nft, encodedRecipient, parsedAmount, params],
+      })
+
+      const data = encodeFunctionData({
+        abi: ETH_TOKEN_POOL_ABI,
+        functionName: 'crossChainContractCallRelay',
+        args: [chainId, nft, encodedRecipient, fee, params],
+      })
+
+      const request: CallWithSyncFeeERC2771Request = {
+        chainId: BigInt(421614), // Goerli in this case
+        target: DEPLOYMENT.ethTokenPool, // target contract address
+        data: data as `0x${string}`, // encoded transaction datas
+        isRelayContext: true, // are we using context contracts
+        feeToken: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', // token to pay the relayer
+        user: address as `0x${string}`,
+      }
+
+      const provider = new ethers.BrowserProvider(window.ethereum!)
+
+      const relayResponse = await relay.callWithSyncFeeERC2771(
+        request,
+        provider,
+        undefined,
+        'VII4NZAvrsnNLdnmuVjPfG8G_qyN2WtgzBIWp5_HlAk_',
+      )
+      const taskId = relayResponse.taskId
+      console.log(`https://relay.gelato.digital/tasks/status/${taskId}`)
+      setLoading(false)
+    })
+  }
 
   return (
     <MikiCard width={300} height={300}>
@@ -54,7 +132,7 @@ const TransferCard = React.memo(({ onClick, setAmount, setAddress, isPending }: 
                 '!cursor-text',
               ],
             }}
-            onChange={setAmount}
+            onChange={handleSetAmount}
           />
           <Input
             type='text'
@@ -79,7 +157,7 @@ const TransferCard = React.memo(({ onClick, setAmount, setAddress, isPending }: 
                 '!cursor-text',
               ],
             }}
-            onChange={setAddress}
+            onChange={handleSetAddress}
           />
           <Select
             items={tokens}
@@ -119,19 +197,17 @@ const TransferCard = React.memo(({ onClick, setAmount, setAddress, isPending }: 
           </Select>
           <div className='flex justify-center w-128'>
             <Button
-              isLoading={isPending}
+              isLoading={loading}
               radius='sm'
-              onClick={onClick}
-              startContent={!isPending ? <Image src={'/icon/send.svg'} width={24} height={24} alt='send' /> : null}
+              onClick={() => transfer()}
+              startContent={!loading ? <Image src={'/icon/send.svg'} width={18} height={18} alt='send' /> : null}
               className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
             >
-              <span className='text-green font-bold text-lg'>{isPending ? 'Sending...' : 'Send'}</span>
+              <span className='text-green font-bold text-lg'>{loading ? 'Sending...' : 'Send'}</span>
             </Button>
           </div>
         </div>
       </div>
     </MikiCard>
   )
-})
-
-export default TransferCard
+}

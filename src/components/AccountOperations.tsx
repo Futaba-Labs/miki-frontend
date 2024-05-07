@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
 import MikiCard from './MikiCard'
 
-export default function AccountOperations({ tab }: { tab: string }) {
+export default function AccountOperations() {
   const [selected, setSelected] = useState('deposits')
   const [amount, setAmount] = useState(0)
 
