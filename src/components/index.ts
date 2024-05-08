@@ -5,6 +5,7 @@ import MikiCard from "./MikiCard";
 import TransferCard from "./TransferCard";
 import CustomConnectButton from "./CustomConnectButton";
 import WithApollo from "./WithApollo";
+import Transactions from "./Transactions";
 
 export {
   AccountOperations,
@@ -13,6 +14,7 @@ export {
   MikiCard,
   TransferCard,
   CustomConnectButton,
-  WithApollo
+  WithApollo,
+  Transactions
 }
 

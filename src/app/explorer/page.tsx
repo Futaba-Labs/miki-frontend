@@ -1,4 +1,4 @@
-import TransactionCard from '@/components/TransactionCard'
+import { WithApollo, Transactions } from '@/components'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -12,7 +12,9 @@ export const metadata: Metadata = {
 export default function Explorer() {
   return (
     <>
-      <TransactionCard />
+      <WithApollo>
+        <Transactions />
+      </WithApollo>
     </>
   )
 }
