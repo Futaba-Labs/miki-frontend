@@ -16,20 +16,26 @@ import MikiCard from './MikiCard'
 
 /* eslint-disable  react/display-name */
 export default function TransferCard() {
-  const tokens = [
-    { key: 'Optimism', value: 'optimism', chainId: 1 },
-    { key: 'Base', value: 'base', chainId: 8453 },
+  const chains = [
+    { key: 'Optimism', value: 'optimism', chainId: 11155420 },
+    { key: 'Base', value: 'base', chainId: 84532 },
   ]
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [selected, setSelected] = useState<any>(new Set(['Select Chain']))
   const [amount, setAmount] = useState(0)
   const [recipient, setRecipient] = useState<`0x${string}`>('0x')
-  const [chainId, setChainId] = useState(84532)
+  const [chainId, setChainId] = useState(0)
   const [loading, setLoading] = useState(false)
 
   const selectedValue = useMemo(() => {
     const value = Array.from(selected).join(', ').replaceAll('_', ' ')
+
+    const chain = chains.find((token) => token.key === value)
+    if (chain) {
+      setChainId(chain.chainId)
+    }
+
     return value
   }, [selected])
 
@@ -53,6 +59,21 @@ export default function TransferCard() {
 
   const transfer = () => {
     setLoading(true)
+
+    if (amount <= 0) {
+      toast.error('Amount must be greater than 0', { position: 'bottom-right' })
+      return
+    }
+
+    if (recipient === '0x') {
+      toast.error('Recipient address is required', { position: 'bottom-right' })
+      return
+    }
+
+    if (selectedValue === 'Select Chain') {
+      toast.error('Select chain', { position: 'bottom-right' })
+      return
+    }
 
     /* eslint-disable no-async-promise-executor */
     return new Promise<void>(async (resolve, reject) => {
@@ -199,7 +220,7 @@ export default function TransferCard() {
             onChange={handleSetAddress}
           />
           <Select
-            items={tokens}
+            items={chains}
             defaultSelectedKeys={['ETH']}
             className='text-green w-128'
             radius='sm'
@@ -224,7 +245,7 @@ export default function TransferCard() {
               ))
             }}
           >
-            {tokens.map((token) => (
+            {chains.map((token) => (
               <SelectItem
                 key={token.key}
                 value={token.value}
