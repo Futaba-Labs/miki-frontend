@@ -6,6 +6,7 @@ import TransferCard from "./TransferCard";
 import CustomConnectButton from "./CustomConnectButton";
 import WithApollo from "./WithApollo";
 import Transactions from "./Transactions";
+import ChatBotWindow from "./ChatBotWindow";
 
 export {
   AccountOperations,
@@ -15,6 +16,7 @@ export {
   TransferCard,
   CustomConnectButton,
   WithApollo,
-  Transactions
+  Transactions,
+  ChatBotWindow
 }
 

@@ -21,6 +21,7 @@ const GET_TRANSACTIONS = gql`
     }
   }
 `
+
 export default function Transactions() {
   const { loading, error, data } = useQuery(GET_TRANSACTIONS)
   if (loading) return <p>Loading...</p>

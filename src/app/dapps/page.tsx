@@ -1,3 +1,4 @@
+import ChatBotWindow from '@/components/ChatBotWindow'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
 
 export default function Dapps() {
   return (
-    <>
-      <p>Dapps</p>
-    </>
+    <div className='flex justify-center items-center h-[calc(100vh-80px)]'>
+      <ChatBotWindow />
+    </div>
   )
 }
