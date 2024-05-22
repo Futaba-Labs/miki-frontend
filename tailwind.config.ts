@@ -17,6 +17,9 @@ const config: Config = {
       },
       boxShadow: {
         inner: "inset 5px 5px 10px 0 rgba(166, 180, 200, 0.75), inset -5px -5px 15px 0 rgba(255, 255, 255, 0.75)",
+        "inner-right-excluded": "inset -5px 5px 10px 0 rgba(166, 180, 200, 0.75), inset -5px -5px 15px 0 rgba(255, 255, 255, 0.75)",
+        "inner-y": "inset 0px 5px 10px 0 rgba(166, 180, 200, 0.75), inset 0px -5px 15px 0 rgba(255, 255, 255, 0.75)",
+        "inner-left-excluded": "inset 5px 5px 10px 0 rgba(166, 180, 200, 0.75), inset 5px -5px 15px 0 rgba(255, 255, 255, 0.75)",
       },
       dropShadow: {
         "custom": ["4px 4px 6px rgba(171, 194, 212, 0.6)", "-4px -4px 6px rgba(255, 255, 255, 0.5)"],
@@ -28,7 +31,12 @@ const config: Config = {
         "green": "#1F8506"
       },
       backgroundColor: {
-        "button": "#F5F5F5"
+        "button": "#F5F5F5",
+        "green": "#1F8506",
+        "grey": "#EFEDF2"
+      },
+      borderColor: {
+        "bottom-green": "border-bottom-color: rgb(31, 133, 6)"
       },
       width: {
         '128': '32rem',

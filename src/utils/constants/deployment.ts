@@ -11,8 +11,8 @@ export const EXAMPLE_DEPLOYMENT: Record<string, Partial<Record<string, string>>>
     "aave": "0xb49D3728F8C069866260B682941F57Bd389669f7"
   },
   ["11155420"]: {
-    "nft": "0x71095b39aF9293c57c4904ab3c3A3755183c58f6",
-    "aave": "0xaaD783B36B84Ad14979Ce68DeECb390523784502"
+    "nft": "0xaaD783B36B84Ad14979Ce68DeECb390523784502",
+    "aave": "0xb50201558B00496A145fE76f7424749556E326D8"
   }
 }
 

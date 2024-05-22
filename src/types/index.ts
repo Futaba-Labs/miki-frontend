@@ -1,10 +1,18 @@
-export type Transaction = {
+export type CrossChainTransaction = {
   id: string
   dstChainId: number
-  from: `0x${string}`
-  reqTransactionHash: `0x${string}`
-  resTransactionHash: `0x${string}`
+  sender: `0x${string}`
+  to: `0x${string}`
+  reqTransaction: Transaction
+  resTransaction: Transaction
   status: Status
+  timestamp: number
+}
+
+export type Transaction = {
+  id: string
+  hash: `0x${string}`
+  from: `0x${string}`
   timestamp: number
 }
 
