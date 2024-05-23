@@ -1,3 +1,5 @@
+import { ChipColor } from "@/types";
+
 export const roundedNumber = (num: number, decimal: number) => {
   return Math.floor(num * (10 ** decimal)) / (10 ** decimal);
 }
@@ -15,6 +17,19 @@ export const convertToChainId = (chain: string, mainnet: boolean): number => {
       default:
         return 0
     }
+  }
+}
+
+export const convertToChainName = (chainId: number): string => {
+  switch (chainId) {
+    case 421614:
+      return 'Arbitrum Sepolia'
+    case 11155420:
+      return 'Optimism Sepolia'
+    case 84532:
+      return 'Base Sepolia'
+    default:
+      return 'Arbitrum Sepolia'
   }
 }
 
@@ -52,7 +67,7 @@ export const calculateTimeDifference = (craetedAt: Date) => {
   }
 }
 
-export const getExploerUrl = (chainId: number) => {
+export const getExploerUrl = (chainId: number): string => {
   switch (chainId) {
     case 5:
       return 'https://goerli.etherscan.io/'
@@ -68,6 +83,8 @@ export const getExploerUrl = (chainId: number) => {
       return 'https://sepolia.arbiscan.io/'
     case 11155420:
       return 'https://sepolia-optimism.etherscan.io/'
+    case 84532:
+      return 'https://sepolia.basescan.org/'
     default:
       return 'https://mumbai.polygonscan.com/'
   }
@@ -83,5 +100,16 @@ export const getChainIconUrl = (chainId: number) => {
       return '/logo/base.svg'
     default:
       return '/logo/arbitrum.svg'
+  }
+}
+
+export const getColor = (status: string): ChipColor => {
+  switch (status) {
+    case 'SUCCESS':
+      return 'success'
+    case 'ERROR':
+      return 'danger'
+    default:
+      return 'secondary'
   }
 }

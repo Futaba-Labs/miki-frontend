@@ -4,9 +4,13 @@ export type CrossChainTransaction = {
   sender: `0x${string}`
   to: `0x${string}`
   reqTransaction: Transaction
-  resTransaction: Transaction
+  resTransaction: Transaction | null
   status: Status
   timestamp: number
+  amount: bigint | null
+  fee: bigint | null
+  receiveAmount: bigint | null
+  asset: `0x${string}` | null
 }
 
 export type Transaction = {
@@ -15,6 +19,9 @@ export type Transaction = {
   from: `0x${string}`
   timestamp: number
 }
+
+export type ChipColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
+
 
 export enum Status {
   PENDING,

@@ -38,16 +38,22 @@ export default function Transactions() {
     setTransactions(data.crossChainExecs.items.slice(start, end))
   }
 
-  setInterval(() => {
-    console.log('refetching')
-    refetch()
-  }, 10000)
-
   useEffect(() => {
     if (data) {
       setTransactions(data.crossChainExecs.items.slice(0, 5))
     }
   }, [data])
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      console.log('refetching')
+      refetch()
+    }, 10000)
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [])
 
   if (loading)
     return (
@@ -109,7 +115,7 @@ export default function Transactions() {
             <th className='font-bold text-black text-xl'>Created</th>
           </tr>
           {transactions.map((transaction: CrossChainTransaction) => {
-            return <TransactionCard key={transaction.id} {...transaction} />
+            return <TransactionCard key={transaction.id} transaction={transaction} />
           })}
         </table>
         <div className='flex justify-center'>

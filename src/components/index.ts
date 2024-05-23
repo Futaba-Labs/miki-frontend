@@ -7,6 +7,7 @@ import CustomConnectButton from "./CustomConnectButton";
 import WithApollo from "./WithApollo";
 import Transactions from "./Transactions";
 import ChatBotWindow from "./ChatBotWindow";
+import TransactionDetail from "./TransactionDetail";
 
 export {
   AccountOperations,
@@ -17,6 +18,7 @@ export {
   CustomConnectButton,
   WithApollo,
   Transactions,
-  ChatBotWindow
+  ChatBotWindow,
+  TransactionDetail
 }
 
