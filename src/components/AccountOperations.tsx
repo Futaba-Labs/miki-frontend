@@ -1,21 +1,31 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { Input, Button, Link } from '@nextui-org/react'
+import { useState, useEffect, useMemo } from 'react'
+import { Input, Button, Link, Select, SelectItem } from '@nextui-org/react'
 import { useAccount, useWriteContract } from 'wagmi'
 import { parseEther } from 'viem'
-import Image from 'next/image'
 import { toast } from 'react-toastify'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
 import MikiCard from './MikiCard'
 
+const items = [
+  { key: 'Deposit', value: 'Deposit' },
+  { key: 'Withdraw', value: 'Withdraw' },
+]
+
 export default function AccountOperations() {
-  const [selected, setSelected] = useState('deposits')
   const [amount, setAmount] = useState(0)
 
   const { isConnected } = useAccount()
   const { writeContract, isPending, isSuccess, isError, data } = useWriteContract()
   const addRecentTransaction = useAddRecentTransaction()
+
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  const [selected, setSelected] = useState<any>(new Set(['Deposit']))
+  const selectedValue = useMemo(() => {
+    const value = Array.from(selected).join(', ').replaceAll('_', ' ')
+    return value
+  }, [selected])
 
   const handleDeposit = () => {
     if (amount === 0) {
@@ -61,72 +71,118 @@ export default function AccountOperations() {
   }, [isSuccess, isError])
 
   return (
-    <MikiCard width={300} height={300}>
-      <div className='flex justify-between items-center px-8 py-10'>
-        <span className='font-bold text-black text-xl'>Add Funds</span>
-        <div className=''>
-          {selected === 'deposits' ? (
-            <div className='flex items-end gap-2 w-full'>
-              <div>
-                <Input
-                  type='text'
-                  label='Amount'
-                  labelPlacement='outside'
-                  placeholder='0.01'
-                  radius='sm'
-                  className='w-80'
-                  classNames={{
-                    label: 'text-black text-sm',
-                    input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
-                    inputWrapper: [
-                      'shadow-inner',
-                      'bg-default-200/50',
-                      'dark:bg-default/60',
-                      'backdrop-blur-xl',
-                      'backdrop-saturate-200',
-                      'hover:bg-default-200/70',
-                      'dark:hover:bg-default/70',
-                      'group-data-[focused=true]:bg-default-200/50',
-                      'dark:group-data-[focused=true]:bg-default/60',
-                      '!cursor-text',
-                    ],
-                  }}
-                  onChange={(e) => setAmount(parseFloat(e.target.value))}
-                />
-              </div>
-              <div style={{ marginTop: '64px' }}></div>
-              <Button
-                isLoading={isPending}
-                radius='sm'
-                onClick={() => handleDeposit()}
-                startContent={!isPending ? <Image src={'/icon/add.svg'} width={24} height={24} alt='add' /> : null}
-                className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
-              >
-                <span className='text-green font-bold text-lg'>{isPending ? 'Depositing...' : 'Deposit'}</span>
-              </Button>
-            </div>
-          ) : (
-            <div className='flex items-center w-full'>
-              <div style={{ marginTop: '16px' }}></div>
-              <div style={{ width: 'calc(100% - 40px)' }}>
-                <Input type='number' variant='underlined' label='Amount' min={0} />
-              </div>
-              <div style={{ marginTop: '64px' }}></div>
-              <Button
-                style={{
-                  backgroundColor: '#6963AB',
-                  width: '120px',
-                  height: '48px',
-                  color: '#FFFFFF',
-                }}
-                onClick={handleWithdraw}
-              >
-                Withdraw
-              </Button>
-            </div>
-          )}
-        </div>
+    <div>
+      <div className='flex justify-end drop-shadow-customp pb-8'>
+        <Select
+          items={items}
+          defaultSelectedKeys={['Deposit']}
+          className='text-green w-36'
+          radius='sm'
+          onSelectionChange={setSelected}
+          renderValue={(items) => {
+            console.log(items)
+            return items.map((item) => (
+              <p key={item.key} className='text-green pl-1 font-bold text-lg'>
+                {item.key!.toString()}
+              </p>
+            ))
+          }}
+        >
+          {items.map((token) => (
+            <SelectItem key={token.key} value={token.value}>
+              <span className='text-black'>{token.value}</span>
+            </SelectItem>
+          ))}
+        </Select>
       </div>
-    </MikiCard>
+      <MikiCard width={300} height={300}>
+        <div className='flex justify-between items-center px-8 py-10'>
+          <span className='font-bold text-black text-xl'>
+            {selectedValue === 'Deposit' ? 'Add Funds' : 'Withdraw Funds'}
+          </span>
+          <div className=''>
+            {selectedValue === 'Deposit' ? (
+              <div className='flex items-end gap-2 w-full'>
+                <div>
+                  <Input
+                    type='text'
+                    label='Amount'
+                    labelPlacement='outside'
+                    placeholder='0.01'
+                    radius='sm'
+                    className='w-80'
+                    classNames={{
+                      label: 'text-black text-sm',
+                      input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
+                      inputWrapper: [
+                        'shadow-inner',
+                        'bg-default-200/50',
+                        'dark:bg-default/60',
+                        'backdrop-blur-xl',
+                        'backdrop-saturate-200',
+                        'hover:bg-default-200/70',
+                        'dark:hover:bg-default/70',
+                        'group-data-[focused=true]:bg-default-200/50',
+                        'dark:group-data-[focused=true]:bg-default/60',
+                        '!cursor-text',
+                      ],
+                    }}
+                    onChange={(e) => setAmount(parseFloat(e.target.value))}
+                  />
+                </div>
+                <div style={{ marginTop: '64px' }}></div>
+                <Button
+                  isLoading={isPending}
+                  radius='sm'
+                  onClick={() => handleDeposit()}
+                  className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+                >
+                  <span className='text-green font-bold text-lg'>{isPending ? 'Depositing...' : 'Deposit'}</span>
+                </Button>
+              </div>
+            ) : (
+              <div className='flex items-end gap-2 w-full'>
+                <div>
+                  <Input
+                    type='text'
+                    label='Amount'
+                    labelPlacement='outside'
+                    placeholder='0.01'
+                    radius='sm'
+                    className='w-80'
+                    classNames={{
+                      label: 'text-black text-sm',
+                      input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
+                      inputWrapper: [
+                        'shadow-inner',
+                        'bg-default-200/50',
+                        'dark:bg-default/60',
+                        'backdrop-blur-xl',
+                        'backdrop-saturate-200',
+                        'hover:bg-default-200/70',
+                        'dark:hover:bg-default/70',
+                        'group-data-[focused=true]:bg-default-200/50',
+                        'dark:group-data-[focused=true]:bg-default/60',
+                        '!cursor-text',
+                      ],
+                    }}
+                    onChange={(e) => setAmount(parseFloat(e.target.value))}
+                  />
+                </div>
+                <div style={{ marginTop: '64px' }}></div>
+                <Button
+                  isLoading={isPending}
+                  radius='sm'
+                  onClick={() => handleWithdraw()}
+                  className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+                >
+                  <span className='text-green font-bold text-lg'>{isPending ? 'Withdrawing...' : 'Withdraw'}</span>
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </MikiCard>
+    </div>
   )
 }

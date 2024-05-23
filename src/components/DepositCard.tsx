@@ -14,12 +14,13 @@ type DepositCardProps = {
   height: number
 }
 
+const tokens = [
+  { key: 'ETH', value: 'ETH' },
+  { key: 'USDC', value: 'USDC' },
+]
+
 export default function DepositCard({ width, height }: DepositCardProps) {
   const [balance, setBalance] = useState(0)
-  const tokens = [
-    { key: 'ETH', value: 'ETH' },
-    { key: 'USDC', value: 'USDC' },
-  ]
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [selected, setSelected] = useState<any>(new Set(['ETH']))

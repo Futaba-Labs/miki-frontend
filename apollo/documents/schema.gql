@@ -1,0 +1,447 @@
+type Query {
+  deposit(id: String!): Deposit
+  deposits(
+    where: DepositFilter
+    orderBy: String
+    orderDirection: String
+    before: String
+    after: String
+    limit: Int
+  ): DepositPage!
+  withdraw(id: String!): Withdraw
+  withdraws(
+    where: WithdrawFilter
+    orderBy: String
+    orderDirection: String
+    before: String
+    after: String
+    limit: Int
+  ): WithdrawPage!
+  requestTransaction(id: String!): RequestTransaction
+  requestTransactions(
+    where: RequestTransactionFilter
+    orderBy: String
+    orderDirection: String
+    before: String
+    after: String
+    limit: Int
+  ): RequestTransactionPage!
+  responseTransaction(id: String!): ResponseTransaction
+  responseTransactions(
+    where: ResponseTransactionFilter
+    orderBy: String
+    orderDirection: String
+    before: String
+    after: String
+    limit: Int
+  ): ResponseTransactionPage!
+  crossChainExec(id: String!): CrossChainExec
+  crossChainExecs(
+    where: CrossChainExecFilter
+    orderBy: String
+    orderDirection: String
+    before: String
+    after: String
+    limit: Int
+  ): CrossChainExecPage!
+}
+
+type Deposit {
+  id: String!
+  amount: BigInt!
+  to: String!
+  tokenPool: String!
+  transactionHash: String!
+  timestamp: Int!
+}
+
+scalar BigInt
+
+type DepositPage {
+  items: [Deposit!]!
+  pageInfo: PageInfo!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+input DepositFilter {
+  AND: [DepositFilter]
+  OR: [DepositFilter]
+  id: String
+  id_not: String
+  id_in: [String]
+  id_not_in: [String]
+  id_contains: String
+  id_not_contains: String
+  id_starts_with: String
+  id_ends_with: String
+  id_not_starts_with: String
+  id_not_ends_with: String
+  amount: BigInt
+  amount_not: BigInt
+  amount_in: [BigInt]
+  amount_not_in: [BigInt]
+  amount_gt: BigInt
+  amount_lt: BigInt
+  amount_gte: BigInt
+  amount_lte: BigInt
+  to: String
+  to_not: String
+  to_in: [String]
+  to_not_in: [String]
+  to_gt: String
+  to_lt: String
+  to_gte: String
+  to_lte: String
+  tokenPool: String
+  tokenPool_not: String
+  tokenPool_in: [String]
+  tokenPool_not_in: [String]
+  tokenPool_gt: String
+  tokenPool_lt: String
+  tokenPool_gte: String
+  tokenPool_lte: String
+  transactionHash: String
+  transactionHash_not: String
+  transactionHash_in: [String]
+  transactionHash_not_in: [String]
+  transactionHash_gt: String
+  transactionHash_lt: String
+  transactionHash_gte: String
+  transactionHash_lte: String
+  timestamp: Int
+  timestamp_not: Int
+  timestamp_in: [Int]
+  timestamp_not_in: [Int]
+  timestamp_gt: Int
+  timestamp_lt: Int
+  timestamp_gte: Int
+  timestamp_lte: Int
+}
+
+type Withdraw {
+  id: String!
+  amount: BigInt!
+  to: String!
+  tokenPool: String!
+  transactionHash: String!
+  timestamp: Int!
+}
+
+type WithdrawPage {
+  items: [Withdraw!]!
+  pageInfo: PageInfo!
+}
+
+input WithdrawFilter {
+  AND: [WithdrawFilter]
+  OR: [WithdrawFilter]
+  id: String
+  id_not: String
+  id_in: [String]
+  id_not_in: [String]
+  id_contains: String
+  id_not_contains: String
+  id_starts_with: String
+  id_ends_with: String
+  id_not_starts_with: String
+  id_not_ends_with: String
+  amount: BigInt
+  amount_not: BigInt
+  amount_in: [BigInt]
+  amount_not_in: [BigInt]
+  amount_gt: BigInt
+  amount_lt: BigInt
+  amount_gte: BigInt
+  amount_lte: BigInt
+  to: String
+  to_not: String
+  to_in: [String]
+  to_not_in: [String]
+  to_gt: String
+  to_lt: String
+  to_gte: String
+  to_lte: String
+  tokenPool: String
+  tokenPool_not: String
+  tokenPool_in: [String]
+  tokenPool_not_in: [String]
+  tokenPool_gt: String
+  tokenPool_lt: String
+  tokenPool_gte: String
+  tokenPool_lte: String
+  transactionHash: String
+  transactionHash_not: String
+  transactionHash_in: [String]
+  transactionHash_not_in: [String]
+  transactionHash_gt: String
+  transactionHash_lt: String
+  transactionHash_gte: String
+  transactionHash_lte: String
+  timestamp: Int
+  timestamp_not: Int
+  timestamp_in: [Int]
+  timestamp_not_in: [Int]
+  timestamp_gt: Int
+  timestamp_lt: Int
+  timestamp_gte: Int
+  timestamp_lte: Int
+}
+
+type RequestTransaction {
+  id: String!
+  hash: String!
+  from: String!
+  timestamp: Int!
+}
+
+type RequestTransactionPage {
+  items: [RequestTransaction!]!
+  pageInfo: PageInfo!
+}
+
+input RequestTransactionFilter {
+  AND: [RequestTransactionFilter]
+  OR: [RequestTransactionFilter]
+  id: String
+  id_not: String
+  id_in: [String]
+  id_not_in: [String]
+  id_contains: String
+  id_not_contains: String
+  id_starts_with: String
+  id_ends_with: String
+  id_not_starts_with: String
+  id_not_ends_with: String
+  hash: String
+  hash_not: String
+  hash_in: [String]
+  hash_not_in: [String]
+  hash_gt: String
+  hash_lt: String
+  hash_gte: String
+  hash_lte: String
+  from: String
+  from_not: String
+  from_in: [String]
+  from_not_in: [String]
+  from_gt: String
+  from_lt: String
+  from_gte: String
+  from_lte: String
+  timestamp: Int
+  timestamp_not: Int
+  timestamp_in: [Int]
+  timestamp_not_in: [Int]
+  timestamp_gt: Int
+  timestamp_lt: Int
+  timestamp_gte: Int
+  timestamp_lte: Int
+}
+
+type ResponseTransaction {
+  id: String!
+  hash: String!
+  from: String!
+  timestamp: Int!
+}
+
+type ResponseTransactionPage {
+  items: [ResponseTransaction!]!
+  pageInfo: PageInfo!
+}
+
+input ResponseTransactionFilter {
+  AND: [ResponseTransactionFilter]
+  OR: [ResponseTransactionFilter]
+  id: String
+  id_not: String
+  id_in: [String]
+  id_not_in: [String]
+  id_contains: String
+  id_not_contains: String
+  id_starts_with: String
+  id_ends_with: String
+  id_not_starts_with: String
+  id_not_ends_with: String
+  hash: String
+  hash_not: String
+  hash_in: [String]
+  hash_not_in: [String]
+  hash_gt: String
+  hash_lt: String
+  hash_gte: String
+  hash_lte: String
+  from: String
+  from_not: String
+  from_in: [String]
+  from_not_in: [String]
+  from_gt: String
+  from_lt: String
+  from_gte: String
+  from_lte: String
+  timestamp: Int
+  timestamp_not: Int
+  timestamp_in: [Int]
+  timestamp_not_in: [Int]
+  timestamp_gt: Int
+  timestamp_lt: Int
+  timestamp_gte: Int
+  timestamp_lte: Int
+}
+
+type CrossChainExec {
+  id: String!
+  sender: String!
+  dstChainId: BigInt!
+  amount: BigInt
+  receiveAmount: BigInt
+  fee: BigInt!
+  to: String!
+  asset: String
+  message: String
+  status: Status!
+  error: String
+  timestamp: Int!
+  reqTransactionId: String!
+  resTransactionId: String
+  reqTransaction: RequestTransaction!
+  resTransaction: ResponseTransaction
+}
+
+enum Status {
+  PENDING
+  SUCCESS
+  ERROR
+}
+
+type CrossChainExecPage {
+  items: [CrossChainExec!]!
+  pageInfo: PageInfo!
+}
+
+input CrossChainExecFilter {
+  AND: [CrossChainExecFilter]
+  OR: [CrossChainExecFilter]
+  id: String
+  id_not: String
+  id_in: [String]
+  id_not_in: [String]
+  id_contains: String
+  id_not_contains: String
+  id_starts_with: String
+  id_ends_with: String
+  id_not_starts_with: String
+  id_not_ends_with: String
+  sender: String
+  sender_not: String
+  sender_in: [String]
+  sender_not_in: [String]
+  sender_gt: String
+  sender_lt: String
+  sender_gte: String
+  sender_lte: String
+  dstChainId: BigInt
+  dstChainId_not: BigInt
+  dstChainId_in: [BigInt]
+  dstChainId_not_in: [BigInt]
+  dstChainId_gt: BigInt
+  dstChainId_lt: BigInt
+  dstChainId_gte: BigInt
+  dstChainId_lte: BigInt
+  amount: BigInt
+  amount_not: BigInt
+  amount_in: [BigInt]
+  amount_not_in: [BigInt]
+  amount_gt: BigInt
+  amount_lt: BigInt
+  amount_gte: BigInt
+  amount_lte: BigInt
+  receiveAmount: BigInt
+  receiveAmount_not: BigInt
+  receiveAmount_in: [BigInt]
+  receiveAmount_not_in: [BigInt]
+  receiveAmount_gt: BigInt
+  receiveAmount_lt: BigInt
+  receiveAmount_gte: BigInt
+  receiveAmount_lte: BigInt
+  fee: BigInt
+  fee_not: BigInt
+  fee_in: [BigInt]
+  fee_not_in: [BigInt]
+  fee_gt: BigInt
+  fee_lt: BigInt
+  fee_gte: BigInt
+  fee_lte: BigInt
+  to: String
+  to_not: String
+  to_in: [String]
+  to_not_in: [String]
+  to_gt: String
+  to_lt: String
+  to_gte: String
+  to_lte: String
+  asset: String
+  asset_not: String
+  asset_in: [String]
+  asset_not_in: [String]
+  asset_gt: String
+  asset_lt: String
+  asset_gte: String
+  asset_lte: String
+  message: String
+  message_not: String
+  message_in: [String]
+  message_not_in: [String]
+  message_gt: String
+  message_lt: String
+  message_gte: String
+  message_lte: String
+  status: Status
+  status_not: Status
+  status_in: [Status]
+  status_not_in: [Status]
+  error: String
+  error_not: String
+  error_in: [String]
+  error_not_in: [String]
+  error_contains: String
+  error_not_contains: String
+  error_starts_with: String
+  error_ends_with: String
+  error_not_starts_with: String
+  error_not_ends_with: String
+  timestamp: Int
+  timestamp_not: Int
+  timestamp_in: [Int]
+  timestamp_not_in: [Int]
+  timestamp_gt: Int
+  timestamp_lt: Int
+  timestamp_gte: Int
+  timestamp_lte: Int
+  reqTransactionId: String
+  reqTransactionId_not: String
+  reqTransactionId_in: [String]
+  reqTransactionId_not_in: [String]
+  reqTransactionId_contains: String
+  reqTransactionId_not_contains: String
+  reqTransactionId_starts_with: String
+  reqTransactionId_ends_with: String
+  reqTransactionId_not_starts_with: String
+  reqTransactionId_not_ends_with: String
+  resTransactionId: String
+  resTransactionId_not: String
+  resTransactionId_in: [String]
+  resTransactionId_not_in: [String]
+  resTransactionId_contains: String
+  resTransactionId_not_contains: String
+  resTransactionId_starts_with: String
+  resTransactionId_ends_with: String
+  resTransactionId_not_starts_with: String
+  resTransactionId_not_ends_with: String
+}

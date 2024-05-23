@@ -17,6 +17,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@apollo/client": "^3.10.3",
     "@gelatonetwork/relay-sdk": "^5.5.6",
     "@layerzerolabs/lz-v2-utilities": "^2.3.1",
     "@rainbow-me/rainbowkit": "^2.0.2",
@@ -34,12 +35,13 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-unused-imports": "^3.2.0",
     "ethers": "6.7.0",
+    "graphql": "^16.8.1",
     "pino-pretty": "^10.3.1",
     "postcss": "^8",
     "prettier": "^3.2.5",
     "react-simple-chatbot": "^0.6.1",
     "react-toastify": "^10.0.5",
-    "styled-components": "^4.4.1",
+    "styled-components": "^6.1.11",
     "tailwindcss": "^3.3.0",
     "typescript": "^5",
     "viem": "2.x",
