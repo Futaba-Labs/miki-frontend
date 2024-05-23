@@ -80,7 +80,8 @@ export default function TransactionDetail({ params }: { params: { id: string } }
   if (error) return <p>Error : {error.message}</p>
 
   const color = getColor(transaction.status.toString())
-  const chainIcon = getChainIconUrl(parseInt(transaction.dstChainId.toString()))
+  const dstChainId = parseInt(transaction.dstChainId.toString())
+  const chainIcon = getChainIconUrl(dstChainId)
 
   return (
     <div className='flex flex-col w-4/5 mx-auto gap-10 pt-12'>
@@ -167,10 +168,10 @@ export default function TransactionDetail({ params }: { params: { id: string } }
                   isExternal
                   isBlock
                   showAnchorIcon
-                  href={getExploerUrl(421614) + 'tx/' + transaction.reqTransaction.hash}
+                  href={getExploerUrl(dstChainId) + 'tx/' + transaction.resTransaction.hash}
                   className='mb-6'
                 >
-                  {omitText(transaction.reqTransaction.hash, 12, 12)}
+                  {omitText(transaction.resTransaction.hash, 12, 12)}
                 </Link>
               ) : (
                 <Skeleton className='h-6 w-3/5 rounded-lg mb-8' />
@@ -182,10 +183,10 @@ export default function TransactionDetail({ params }: { params: { id: string } }
                   isExternal
                   isBlock
                   showAnchorIcon
-                  href={getExploerUrl(421614) + 'address/' + transaction.reqTransaction.from}
+                  href={getExploerUrl(dstChainId) + 'address/' + transaction.resTransaction.from}
                   className='mb-6'
                 >
-                  {omitText(transaction.reqTransaction.from, 12, 12)}
+                  {omitText(transaction.resTransaction.from, 12, 12)}
                 </Link>
               ) : (
                 <Skeleton className='h-6 w-3/5 rounded-lg mb-8' />
@@ -193,7 +194,7 @@ export default function TransactionDetail({ params }: { params: { id: string } }
 
               <p className='text-lg text-black pb-1'>Timestamp</p>
               {transaction.resTransaction ? (
-                <p className='text-black'>{new Date(transaction.reqTransaction.timestamp * 1000).toLocaleString()}</p>
+                <p className='text-black'>{new Date(transaction.resTransaction.timestamp * 1000).toLocaleString()}</p>
               ) : (
                 <Skeleton className='h-6 w-3/5 rounded-lg' />
               )}

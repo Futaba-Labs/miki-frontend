@@ -3,6 +3,7 @@
 import { gql, useQuery } from '@apollo/client'
 import { Input, Button, Spinner, Pagination } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { CrossChainTransaction } from '@/types'
 import TransactionCard from './TransactionCard'
 
@@ -16,6 +17,8 @@ const GET_TRANSACTIONS = gql`
         to
         status
         timestamp
+        reqTransactionId
+        resTransactionId
         reqTransaction {
           hash
         }
@@ -27,10 +30,42 @@ const GET_TRANSACTIONS = gql`
   }
 `
 
+const SEARCH_TRANSACTION = gql`
+  query SearchTransaction($hash: String!) {
+    crossChainExecs(where: { OR: [{ reqTransactionId: $hash }, { resTransactionId: $hash }] }) {
+      items {
+        id
+      }
+    }
+  }
+`
+
 export default function Transactions() {
-  const { loading, error, data, refetch } = useQuery(GET_TRANSACTIONS)
-  const [transactions, setTransactions] = useState<CrossChainTransaction[]>([])
   const [searchParam, setSearchParam] = useState('')
+  const [searchLoading, setSearchLoading] = useState(false)
+  const { loading, error, data, refetch } = useQuery(GET_TRANSACTIONS)
+  const {
+    data: searchData,
+    refetch: searchRefetch,
+    error: searchError,
+  } = useQuery(SEARCH_TRANSACTION, {
+    variables: { hash: '0x' },
+  })
+  const [transactions, setTransactions] = useState<CrossChainTransaction[]>([])
+
+  const router = useRouter()
+
+  const handleSearch = () => {
+    setSearchLoading(true)
+    const matchingItem = data.crossChainExecs.items.find(
+      (item: CrossChainTransaction) => item.reqTransactionId === searchParam || item.resTransactionId === searchParam,
+    )
+    if (matchingItem) {
+      router.push(`/explorer/${matchingItem.id}`)
+    } else {
+      searchRefetch({ variables: { hash: searchParam } })
+    }
+  }
 
   const handlePagination = (page: number) => {
     const start = (page - 1) * 5
@@ -45,8 +80,21 @@ export default function Transactions() {
   }, [data])
 
   useEffect(() => {
+    if (searchError) {
+      console.log(searchError)
+    }
+
+    if (searchData) {
+      console.log('searchData', searchData)
+      if (searchData.crossChainExecs.items.length > 0) {
+        router.push(`/explorer/${searchData.crossChainExecs.items[0].id}`)
+      }
+    }
+    setSearchLoading(false)
+  }, [searchData, searchError])
+
+  useEffect(() => {
     const intervalId = setInterval(() => {
-      console.log('refetching')
       refetch()
     }, 10000)
 
@@ -76,7 +124,7 @@ export default function Transactions() {
       <div className='flex items-end justify-center gap-2 w-full py-10'>
         <Input
           type='text'
-          label='Search by Sender Address or Transaction Hash'
+          label='Search by Transaction Hash'
           labelPlacement='outside'
           placeholder='0x...'
           radius='sm'
@@ -99,8 +147,13 @@ export default function Transactions() {
           onChange={(e) => setSearchParam(e.target.value)}
         />
         <div style={{ marginTop: '64px' }}></div>
-        <Button radius='sm' onClick={() => {}} className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'>
-          <span className='text-green font-bold text-lg'>Search</span>
+        <Button
+          isLoading={searchLoading}
+          radius='sm'
+          onClick={() => handleSearch()}
+          className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+        >
+          <span className='text-green font-bold text-lg'>{searchLoading ? 'Searching...' : 'Search'}</span>
         </Button>
       </div>
 

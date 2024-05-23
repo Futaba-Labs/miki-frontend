@@ -3,6 +3,8 @@ export type CrossChainTransaction = {
   dstChainId: number
   sender: `0x${string}`
   to: `0x${string}`
+  reqTransactionId: `0x${string}`
+  resTransactionId: `0x${string}` | null
   reqTransaction: Transaction
   resTransaction: Transaction | null
   status: Status
