@@ -73,6 +73,15 @@ export default function Transactions() {
     setTransactions(data.crossChainExecs.items.slice(start, end))
   }
 
+  const getTotalPage = (itemLen: number) => {
+    if (itemLen / 5 >= 5) return 5
+    if (itemLen % 5 === 0) {
+      return itemLen / 5
+    } else {
+      return Math.floor(itemLen / 5) + 1
+    }
+  }
+
   useEffect(() => {
     if (data) {
       setTransactions(data.crossChainExecs.items.slice(0, 5))
@@ -174,9 +183,7 @@ export default function Transactions() {
         <div className='flex justify-center'>
           <Pagination
             showControls
-            total={
-              data.crossChainExecs.items.length / 5 >= 5 ? 5 : Math.floor(data.crossChainExecs.items.length / 5) + 1
-            }
+            total={getTotalPage(data.crossChainExecs.items.length)}
             initialPage={1}
             classNames={{
               cursor: ['bg-green'],

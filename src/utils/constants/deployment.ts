@@ -5,14 +5,16 @@ export const DEPLOYMENT: Record<string, string> = {
   "ethAdapter": "0x9B20e595ee83dc514A8cE4be885ceCE14957E78C",
 }
 
-export const EXAMPLE_DEPLOYMENT: Record<string, Partial<Record<string, string>>> = {
+export const EXAMPLE_DEPLOYMENT: Record<string, Partial<Record<string, `0x${string}`>>> = {
   ["84532"]: {
     "nft": "0x6a7A87ae550dD0190f7c844a51a7F9f258EFBdA5",
-    "aave": "0xb49D3728F8C069866260B682941F57Bd389669f7"
+    "aave": "0xb49D3728F8C069866260B682941F57Bd389669f7",
+    "weth": "0x4200000000000000000000000000000000000006"
   },
   ["11155420"]: {
     "nft": "0xaaD783B36B84Ad14979Ce68DeECb390523784502",
-    "aave": "0xb50201558B00496A145fE76f7424749556E326D8"
+    "aave": "0xb50201558B00496A145fE76f7424749556E326D8",
+    "weth": "0x4200000000000000000000000000000000000006"
   }
 }
 
