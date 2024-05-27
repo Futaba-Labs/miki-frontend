@@ -47,9 +47,14 @@ export default function CustomConnectButton() {
 
               if (chain.unsupported) {
                 return (
-                  <button onClick={openChainModal} type='button'>
-                    Wrong network
-                  </button>
+                  <Button
+                    radius='sm'
+                    className='bg-button drop-shadow-wallet py-5 hover:bg-red-100'
+                    onClick={openChainModal}
+                    startContent={<Image src={'/icon/wallet_red.svg'} alt='wallet' width={18} height={18} />}
+                  >
+                    <span className='font-bold text-red-500  text-lg'>Wrong Network</span>
+                  </Button>
                 )
               }
 

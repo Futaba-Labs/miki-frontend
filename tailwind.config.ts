@@ -33,6 +33,8 @@ const config: Config = {
       backgroundColor: {
         "button": "#F5F5F5",
         "green": "#1F8506",
+        "green-100": "rgb(220 252 231)",
+        "green-200": "rgb(187 247 208)",
         "grey": "#EFEDF2"
       },
       borderColor: {
