@@ -8,9 +8,21 @@ import { useAccount } from 'wagmi'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { arbitrumSepolia } from 'viem/chains'
 import { CallWithSyncFeeERC2771Request, GelatoRelay, TaskState } from '@gelatonetwork/relay-sdk'
-import { Link } from '@nextui-org/react'
+import {
+  Button,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from '@nextui-org/react'
 import { ethers } from 'ethers'
+import { useState } from 'react'
+import Image from 'next/image'
 import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI, EXAMPLE_DEPLOYMENT } from '@/utils'
+import { convertToChainName, getChainIconUrl } from '@/utils/helper'
 
 const theme = {
   background: '#f5f8fb',
@@ -22,10 +34,6 @@ const theme = {
   botFontColor: '#fff',
   userBubbleColor: '#fff',
   userFontColor: '#4a4a4a',
-}
-
-const Review = () => {
-  return <div></div>
 }
 
 export default function ChatBotWindow() {
@@ -87,7 +95,7 @@ export default function ChatBotWindow() {
     },
     {
       id: '11',
-      options: [{ value: 'Lending', label: 'Lending', trigger: '12' }],
+      options: [{ value: 'Lending (AAVE)', label: 'Lending (AAVE)', trigger: '12' }],
     },
     {
       id: '12',
@@ -97,8 +105,20 @@ export default function ChatBotWindow() {
     {
       id: 'amount',
       user: true,
+      validator: (value: number) => {
+        if (isNaN(value)) {
+          return 'value should be a number'
+        }
+
+        if (value <= 0) {
+          return 'value should be greater than 0'
+        }
+
+        return true
+      },
       trigger: '30',
     },
+
     {
       id: '30',
       message: 'Which chain do you want to execute the transaction on?',
@@ -113,33 +133,17 @@ export default function ChatBotWindow() {
     },
     {
       id: '32',
-      message: 'Great! Check out your summary',
-      trigger: 'review',
-    },
-    {
-      id: 'review',
-      component: <Review />,
-      asMessage: true,
-      trigger: 'update',
-    },
-    {
-      id: 'update',
-      message: 'Would you like to update some field?',
-      trigger: 'update-question',
-    },
-    {
-      id: 'update-question',
-      options: [
-        { value: 'yes', label: 'Yes', trigger: '1' },
-        { value: 'no', label: 'No', trigger: '33' },
-      ],
-    },
-    {
-      id: '33',
-      message: "Alright, let's proceed with the transaction.",
+      message: 'Great! Check out your transaction',
       end: true,
     },
   ]
+
+  const [dapps, setDapps] = useState(''),
+    [nftOption, setNftOption] = useState(''),
+    [defiOption, setDefiOption] = useState(''),
+    [amount, setAmount] = useState(BigInt(0)),
+    [chain, setChain] = useState(0),
+    [loading, setLoading] = useState(false)
 
   const { address } = useAccount()
 
@@ -150,23 +154,36 @@ export default function ChatBotWindow() {
 
   const relay = new GelatoRelay()
 
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+
   const handleEnd = ({ values }: { values: Array<string> }) => {
+    setChain(parseInt(values[3]))
+    if (values[0] === 'NFT') {
+      setDapps('NFT')
+      setNftOption(values[1])
+      if (values[1] === 'Token') {
+        setAmount(parseEther('0.001'))
+      }
+    } else {
+      setDapps('DeFi')
+      setDefiOption(values[1])
+      setAmount(parseEther(values[2]))
+    }
+    onOpen()
+  }
+
+  const sendTxn = () => {
     if (!address) {
       toast.error('Please connect your wallet', { position: 'bottom-right' })
       return
     }
 
-    const dstChianId = parseInt(values[3])
+    setLoading(true)
+
     /* eslint-disable no-async-promise-executor */
     return new Promise<void>(async (resolve, reject) => {
-      let amount = 0
       let data = ''
-      if (values[0] === 'NFT') {
-        console.log('NFT')
-        if (values[1] !== 'Free') {
-          amount = 0.001
-        }
-
+      if (dapps === 'NFT') {
         const parsedAmount = parseEther(amount.toString())
         const encodedRecipient = encodeAbiParameters([{ type: 'address', name: 'recipient' }], [address])
         const _options = Options.newOptions().addExecutorLzReceiveOption(1000000, 0)
@@ -177,32 +194,30 @@ export default function ChatBotWindow() {
           ],
           [_options.toHex() as `0x${string}`, '0x0'],
         )
-        const nft = EXAMPLE_DEPLOYMENT[dstChianId.toString()].nft
+        const nft = EXAMPLE_DEPLOYMENT[chain.toString()].nft
 
         const fee = await client.readContract({
           address: DEPLOYMENT.ethAdapter as `0x${string}`,
           abi: ETH_ADAPTER_ABI,
           functionName: 'estimateFee',
-          args: [address, dstChianId, nft, nft, encodedRecipient, parsedAmount, params],
+          args: [address, chain, nft, nft, encodedRecipient, parsedAmount, params],
         })
 
         data = encodeFunctionData({
           abi: ETH_TOKEN_POOL_ABI,
           functionName: 'crossChainContractCallRelay',
-          args: [dstChianId, nft, encodedRecipient, fee, params],
+          args: [chain, nft, encodedRecipient, fee, params],
         })
       } else {
-        const amount = parseEther(values[2])
-
-        const aave = EXAMPLE_DEPLOYMENT[dstChianId.toString()].aave
-        const weth = EXAMPLE_DEPLOYMENT[dstChianId.toString()].weth
+        const aave = EXAMPLE_DEPLOYMENT[chain.toString()].aave
+        const weth = EXAMPLE_DEPLOYMENT[chain.toString()].weth
 
         const encodedMsg = encodeAbiParameters([{ type: 'address', name: 'weth' }], [weth!])
 
         data = encodeFunctionData({
           abi: ETH_TOKEN_POOL_ABI,
           functionName: 'crossChainContractCallWithAssetRelay',
-          args: [dstChianId, aave, encodedMsg, 0, amount, '0x'],
+          args: [chain, aave, encodedMsg, 0, amount, '0x'],
         })
       }
 
@@ -223,6 +238,7 @@ export default function ChatBotWindow() {
         console.log(relayResponse)
         taskId = relayResponse.taskId
       } catch (error) {
+        onClose()
         toast.error('Transfer failed', { position: 'bottom-right' })
         return
       }
@@ -231,7 +247,7 @@ export default function ChatBotWindow() {
       const intervalId = setInterval(async () => {
         const status = await relay.getTaskStatus(taskId)
         if (status?.taskState === TaskState.ExecSuccess) {
-          if (values[0] === 'NFT') {
+          if (dapps === 'NFT') {
             toast.success(
               <>
                 <p>Transfer successful!</p>
@@ -250,17 +266,19 @@ export default function ChatBotWindow() {
           } else {
             toast.success('Transfer successful!', { position: 'bottom-right' })
           }
-
+          onClose()
           clearInterval(intervalId)
         }
 
         if (status?.taskState === TaskState.ExecReverted || status?.taskState === TaskState.Cancelled) {
           toast.error('Transfer failed', { position: 'bottom-right' })
+          onClose()
           clearInterval(intervalId)
         }
 
         if (retry > 5) {
           toast.error('Timeout', { position: 'bottom-right' })
+          onClose()
           clearInterval(intervalId)
         }
 
@@ -272,13 +290,71 @@ export default function ChatBotWindow() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <ChatBot
-          headerTitle={'Miki Smart Dapps'}
-          botAvatar={'/favicon.png'}
-          steps={chatbotSteps}
-          handleEnd={handleEnd}
-        />
+        <div className='z-0'>
+          <ChatBot
+            headerTitle={'Miki Smart Dapps'}
+            botAvatar={'/favicon.png'}
+            steps={chatbotSteps}
+            handleEnd={handleEnd}
+          />
+        </div>
       </ThemeProvider>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='z-10'>
+        <ModalContent>
+          {(onClose) => (
+            <ModalContent>
+              <ModalHeader className='flex flex-col gap-1'>Transaction Summary</ModalHeader>
+              <ModalBody>
+                <div className='flex flex-col gap-2'>
+                  <div className='flex flex-row justify-between'>
+                    <p className='font-bold text-black'>Dapps</p>
+                    <p>{dapps}</p>
+                  </div>
+                  {dapps === 'NFT' ? (
+                    <div className='flex flex-row justify-between'>
+                      <p className='font-bold text-black'>NFT</p>
+                      <p>{nftOption}</p>
+                    </div>
+                  ) : (
+                    <div className='flex flex-row justify-between'>
+                      <p className='font-bold text-black'>DeFi</p>
+                      <p>{defiOption}</p>
+                    </div>
+                  )}
+                  <div className='flex flex-row justify-between'>
+                    <p className='font-bold text-black'>Amount</p>
+                    <p>{ethers.formatEther(amount)}</p>
+                  </div>
+                  <div className='flex flex-row justify-between'>
+                    <p className='font-bold text-black'>Destination chain</p>
+                    <div className='flex flex-row gap-1'>
+                      <Image src={getChainIconUrl(chain)} width={20} height={20} alt={convertToChainName(chain)} />
+                      <p>{convertToChainName(chain)}</p>
+                    </div>
+                  </div>
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  radius='sm'
+                  onClick={onClose}
+                  className='bg-button drop-shadow-button hover:bg-red-100 focus:ring'
+                >
+                  <span className='text-red-500 font-bold text-lg'>Cancel</span>
+                </Button>
+                <Button
+                  isLoading={loading}
+                  radius='sm'
+                  onClick={sendTxn}
+                  className='bg-button drop-shadow-button hover:bg-green-200 focus:ring'
+                >
+                  <span className='text-green font-bold text-lg'>{loading ? 'Signing...' : 'Sign Txn'}</span>
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   )
 }

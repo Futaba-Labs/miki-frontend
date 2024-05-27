@@ -13,7 +13,7 @@ export const EXAMPLE_DEPLOYMENT: Record<string, Partial<Record<string, `0x${stri
   },
   ["11155420"]: {
     "nft": "0xaaD783B36B84Ad14979Ce68DeECb390523784502",
-    "aave": "0xb50201558B00496A145fE76f7424749556E326D8",
+    "aave": "0x71095b39aF9293c57c4904ab3c3A3755183c58f6",
     "weth": "0x4200000000000000000000000000000000000006"
   }
 }
