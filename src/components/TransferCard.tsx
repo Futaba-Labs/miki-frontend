@@ -203,6 +203,7 @@ export default function TransferCard() {
     if (amountParam) {
       setAmount(parseFloat(amountParam))
     }
+    console.log('recipientParam', recipientParam)
     if (recipientParam) {
       setRecipient(recipientParam as `0x${string}`)
     } else {
@@ -275,7 +276,7 @@ export default function TransferCard() {
                   '!cursor-text',
                 ],
               }}
-              defaultValue={recipientParam ? recipientParam : ''}
+              value={recipient}
               onChange={handleSetAddress}
             />
             <Select
