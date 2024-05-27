@@ -58,8 +58,6 @@ export default function TransferCard() {
   )
 
   const transfer = () => {
-    setLoading(true)
-
     if (amount <= 0) {
       toast.error('Amount must be greater than 0', { position: 'bottom-right' })
       return
@@ -74,6 +72,8 @@ export default function TransferCard() {
       toast.error('Select chain', { position: 'bottom-right' })
       return
     }
+
+    setLoading(true)
 
     /* eslint-disable no-async-promise-executor */
     return new Promise<void>(async (resolve, reject) => {
