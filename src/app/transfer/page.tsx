@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { DepositCard, TransferCard } from '@/components'
 import type { Metadata } from 'next'
 
@@ -15,7 +16,9 @@ export default function Transfer() {
       <DepositCard width={300} height={300} />
 
       <div className='col-start-7 col-end-10 h-[350px]'>
-        <TransferCard />
+        <Suspense>
+          <TransferCard />
+        </Suspense>
       </div>
     </div>
   )
