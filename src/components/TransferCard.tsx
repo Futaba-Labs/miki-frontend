@@ -1,8 +1,20 @@
 'use client'
 
 import 'viem/window'
-import { Input, Button, Select, SelectItem, Link } from '@nextui-org/react'
-import React, { useCallback, useMemo, useState } from 'react'
+import {
+  Input,
+  Button,
+  Select,
+  SelectItem,
+  Link,
+  useDisclosure,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from '@nextui-org/react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { GelatoRelay, CallWithSyncFeeERC2771Request, TaskState } from '@gelatonetwork/relay-sdk'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
@@ -11,10 +23,10 @@ import { toast } from 'react-toastify'
 import { createPublicClient, http, parseEther, encodeAbiParameters, encodeFunctionData } from 'viem'
 import { arbitrumSepolia } from 'viem/chains'
 import { useAccount } from 'wagmi'
+import { useSearchParams } from 'next/navigation'
 import { EXAMPLE_DEPLOYMENT, DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI } from '@/utils'
 import MikiCard from './MikiCard'
 
-/* eslint-disable  react/display-name */
 export default function TransferCard() {
   const chains = [
     { key: 'Optimism', value: 'optimism', chainId: 11155420 },
@@ -27,6 +39,7 @@ export default function TransferCard() {
   const [recipient, setRecipient] = useState<`0x${string}`>('0x')
   const [chainId, setChainId] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [isCopied, setIsCopied] = useState(false)
 
   const selectedValue = useMemo(() => {
     const value = Array.from(selected).join(', ').replaceAll('_', ' ')
@@ -40,6 +53,12 @@ export default function TransferCard() {
   }, [selected])
 
   const { address } = useAccount()
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const params = useSearchParams()
+
+  const amountParam = params.get('amount')
+  const recipientParam = params.get('recipient')
+  const chainParam = params.get('chainId')
 
   const client = createPublicClient({
     chain: arbitrumSepolia,
@@ -163,111 +182,178 @@ export default function TransferCard() {
     })
   }
 
-  return (
-    <MikiCard width={300} height={300}>
-      <div className='flex justify-between items-center px-8 py-8'>
-        <span className='font-bold text-black text-xl'>Transfer</span>
+  const createTransferLink = (transferAmount: number, to: string, dstChainId: number) => {
+    const currentUrl = window.location.href
+    const url = new URL(currentUrl)
+    url.searchParams.set('amount', transferAmount.toString())
+    url.searchParams.set('recipient', to)
+    url.searchParams.set('chainId', dstChainId.toString())
+    return url.href
+  }
 
-        <div className='flex flex-col items-end w-full gap-4'>
-          <Input
-            type='text'
-            label='Amount'
-            labelPlacement='outside'
-            placeholder='0.01'
-            radius='sm'
-            className='w-128'
-            classNames={{
-              label: 'text-black text-sm',
-              input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
-              inputWrapper: [
-                'shadow-inner',
-                'bg-default-200/50',
-                'dark:bg-default/60',
-                'backdrop-blur-xl',
-                'backdrop-saturate-200',
-                'hover:bg-default-200/70',
-                'dark:hover:bg-default/70',
-                'group-data-[focused=true]:bg-default-200/50',
-                'dark:group-data-[focused=true]:bg-default/60',
-                '!cursor-text',
-              ],
-            }}
-            onChange={handleSetAmount}
-          />
-          <Input
-            type='text'
-            label='Address'
-            labelPlacement='outside'
-            placeholder='0x...'
-            radius='sm'
-            className='w-128'
-            classNames={{
-              label: 'text-black text-sm',
-              input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
-              inputWrapper: [
-                'shadow-inner',
-                'bg-default-200/50',
-                'dark:bg-default/60',
-                'backdrop-blur-xl',
-                'backdrop-saturate-200',
-                'hover:bg-default-200/70',
-                'dark:hover:bg-default/70',
-                'group-data-[focused=true]:bg-default-200/50',
-                'dark:group-data-[focused=true]:bg-default/60',
-                '!cursor-text',
-              ],
-            }}
-            onChange={handleSetAddress}
-          />
-          <Select
-            items={chains}
-            defaultSelectedKeys={['ETH']}
-            className='text-green w-128'
-            radius='sm'
-            onSelectionChange={setSelected}
-            labelPlacement='outside'
-            label='Chain'
-            placeholder='Select chain'
-            startContent={
-              selectedValue !== '' &&
-              selectedValue !== 'Select Chain' && (
-                <Image src={`/logo/${selectedValue.toLowerCase()}.svg`} width={25} height={25} alt={selectedValue} />
-              )
-            }
-            renderValue={(items) => {
-              if (selectedValue === 'Select Chain') {
-                return <p className='text-green pl-1 font-bold text-lg'>Select Chain</p>
-              }
-              return items.map((item) => (
-                <p key={item.key} className='text-green pl-1 font-bold text-lg'>
-                  {item.key!.toString()}
-                </p>
-              ))
-            }}
-          >
-            {chains.map((token) => (
-              <SelectItem
-                key={token.key}
-                value={token.value}
-                startContent={<Image src={`/logo/${token.value}.svg`} width={25} height={25} alt={token.value} />}
-              >
-                <span className='text-black'>{token.key}</span>
-              </SelectItem>
-            ))}
-          </Select>
-          <div className='flex justify-center w-128'>
-            <Button
-              isLoading={loading}
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text)
+    setIsCopied(true)
+    setTimeout(() => {
+      setIsCopied(false)
+    }, 2000)
+  }
+
+  useEffect(() => {
+    if (amountParam) {
+      setAmount(parseFloat(amountParam))
+    }
+    if (recipientParam) {
+      setRecipient(recipientParam as `0x${string}`)
+    } else {
+      if (address) {
+        setRecipient(address)
+      }
+    }
+    if (chainParam) {
+      const chain = chains.find((chain) => chain.chainId === parseInt(chainParam))
+      console.log('chain', chain)
+      if (chain) {
+        setSelected(new Set([chain.key]))
+      }
+    }
+  }, [address, params])
+
+  return (
+    <>
+      <MikiCard width={300} height={300}>
+        <div className='flex justify-between items-center px-8 py-8'>
+          <span className='font-bold text-black text-xl'>Transfer</span>
+
+          <div className='flex flex-col items-end w-full gap-4'>
+            <Input
+              type='text'
+              label='Amount'
+              labelPlacement='outside'
+              placeholder='0.01'
               radius='sm'
-              onClick={() => transfer()}
-              startContent={!loading ? <Image src={'/icon/send.svg'} width={18} height={18} alt='send' /> : null}
-              className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+              className='w-128'
+              classNames={{
+                label: 'text-black text-sm',
+                input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
+                inputWrapper: [
+                  'shadow-inner',
+                  'bg-default-200/50',
+                  'dark:bg-default/60',
+                  'backdrop-blur-xl',
+                  'backdrop-saturate-200',
+                  'hover:bg-default-200/70',
+                  'dark:hover:bg-default/70',
+                  'group-data-[focused=true]:bg-default-200/50',
+                  'dark:group-data-[focused=true]:bg-default/60',
+                  '!cursor-text',
+                ],
+              }}
+              defaultValue={amountParam ? amountParam.toString() : ''}
+              onChange={handleSetAmount}
+            />
+            <Input
+              type='text'
+              label='Address'
+              labelPlacement='outside'
+              placeholder='0x...'
+              radius='sm'
+              className='w-128'
+              classNames={{
+                label: 'text-black text-sm',
+                input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
+                inputWrapper: [
+                  'shadow-inner',
+                  'bg-default-200/50',
+                  'dark:bg-default/60',
+                  'backdrop-blur-xl',
+                  'backdrop-saturate-200',
+                  'hover:bg-default-200/70',
+                  'dark:hover:bg-default/70',
+                  'group-data-[focused=true]:bg-default-200/50',
+                  'dark:group-data-[focused=true]:bg-default/60',
+                  '!cursor-text',
+                ],
+              }}
+              defaultValue={recipientParam ? recipientParam : ''}
+              onChange={handleSetAddress}
+            />
+            <Select
+              items={chains}
+              className='text-green w-128'
+              radius='sm'
+              onSelectionChange={setSelected}
+              labelPlacement='outside'
+              label='Chain'
+              placeholder='Select chain'
+              defaultSelectedKeys={selectedValue && [selectedValue]}
+              startContent={
+                selectedValue !== '' &&
+                selectedValue !== 'Select Chain' && (
+                  <Image src={`/logo/${selectedValue.toLowerCase()}.svg`} width={25} height={25} alt={selectedValue} />
+                )
+              }
+              renderValue={(items) => {
+                if (selectedValue === 'Select Chain') {
+                  return <p className='text-green pl-1 font-bold text-lg'>Select Chain</p>
+                } else {
+                  return <p className='text-green pl-1 font-bold text-lg'>{selectedValue}</p>
+                }
+              }}
             >
-              <span className='text-green font-bold text-lg'>{loading ? 'Sending...' : 'Send'}</span>
-            </Button>
+              {chains.map((token) => (
+                <SelectItem
+                  key={token.key}
+                  value={token.value}
+                  startContent={<Image src={`/logo/${token.value}.svg`} width={25} height={25} alt={token.value} />}
+                >
+                  <span className='text-black'>{token.key}</span>
+                </SelectItem>
+              ))}
+            </Select>
+            <div className='flex justify-center gap-4 w-128'>
+              <Button
+                isLoading={loading}
+                radius='sm'
+                onClick={() => transfer()}
+                startContent={!loading ? <Image src={'/icon/send.svg'} width={18} height={18} alt='send' /> : null}
+                className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+              >
+                <span className='text-green font-bold text-lg'>{loading ? 'Sending...' : 'Send'}</span>
+              </Button>
+              <Button
+                radius='sm'
+                onClick={onOpen}
+                className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+              >
+                <span className='text-green font-bold text-lg'>Create Link</span>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
-    </MikiCard>
+      </MikiCard>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className='flex flex-col gap-1'>Transfer Link</ModalHeader>
+              <ModalBody>
+                <p className='text-black pb-2'>You can share this link with others to request token transfer.</p>
+                <span className='overflow-auto text-black'>{createTransferLink(amount, recipient, chainId)}</span>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  radius='sm'
+                  onClick={() => handleCopy(createTransferLink(amount, recipient, chainId))}
+                  className='bg-button drop-shadow-button hover:bg-green-100'
+                >
+                  <span className='text-green font-bold text-lg'>{isCopied ? 'Copied!' : 'Copy'}</span>
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
