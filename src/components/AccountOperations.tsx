@@ -57,7 +57,7 @@ export default function AccountOperations() {
         setAmount(parseFloat(value))
       }
     },
-    [amount],
+    [setAmount],
   )
 
   const hanndleMax = async (value: bigint | undefined) => {
