@@ -1,11 +1,12 @@
 'use client'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Input, Button, Link, Select, SelectItem } from '@nextui-org/react'
-import { useAccount, useWriteContract } from 'wagmi'
-import { parseEther } from 'viem'
+import { useAccount, useBalance, useWriteContract } from 'wagmi'
+import { formatEther, parseEther } from 'viem'
 import { toast } from 'react-toastify'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
+import { roundedNumber } from '@/utils/helper'
 import MikiCard from './MikiCard'
 
 const items = [
@@ -16,7 +17,10 @@ const items = [
 export default function AccountOperations() {
   const [amount, setAmount] = useState(0)
 
-  const { isConnected } = useAccount()
+  const { address } = useAccount()
+  const { data: balance, refetch: refetchBalance } = useBalance({
+    address: address as `0x${string}`,
+  })
   const { writeContract, isPending, isSuccess, isError, data } = useWriteContract()
   const addRecentTransaction = useAddRecentTransaction()
 
@@ -45,6 +49,31 @@ export default function AccountOperations() {
     // TODO: implement
   }
 
+  const handleSetAmount = useCallback(
+    (value: string) => {
+      if (value === '') {
+        setAmount(0)
+      } else {
+        setAmount(parseFloat(value))
+      }
+    },
+    [amount],
+  )
+
+  const hanndleMax = async (value: bigint | undefined) => {
+    if (value) {
+      setAmount(parseFloat(formatEther(value)) - 0.001)
+    }
+  }
+
+  const convertToEther = (value: bigint | undefined) => {
+    if (value) {
+      const formattedBalance = parseFloat(formatEther(value))
+      return roundedNumber(formattedBalance, 4)
+    }
+    return 0
+  }
+
   useEffect(() => {
     if (isSuccess) {
       if (data) {
@@ -70,6 +99,12 @@ export default function AccountOperations() {
     }
   }, [isSuccess, isError])
 
+  useEffect(() => {
+    if (address) {
+      refetchBalance()
+    }
+  }, [address])
+
   return (
     <div>
       <div className='flex justify-end drop-shadow-customp pb-8'>
@@ -80,7 +115,6 @@ export default function AccountOperations() {
           radius='sm'
           onSelectionChange={setSelected}
           renderValue={(items) => {
-            console.log(items)
             return items.map((item) => (
               <p key={item.key} className='text-green pl-1 font-bold text-lg'>
                 {item.key!.toString()}
@@ -108,7 +142,7 @@ export default function AccountOperations() {
                     type='text'
                     label='Amount'
                     labelPlacement='outside'
-                    placeholder='0.01'
+                    placeholder='0'
                     radius='sm'
                     className='w-80'
                     classNames={{
@@ -127,7 +161,24 @@ export default function AccountOperations() {
                         '!cursor-text',
                       ],
                     }}
-                    onChange={(e) => setAmount(parseFloat(e.target.value))}
+                    onChange={(e) => handleSetAmount(e.target.value)}
+                    value={amount === 0 ? undefined : amount.toString()}
+                    endContent={
+                      <div className='flex gap-1  '>
+                        <div className='flex gap-1'>
+                          <span className='text-black text-sm'>Balance:</span>
+                          <span className='text-black text-sm'>{convertToEther(balance?.value)}</span>
+                        </div>
+                        <Button
+                          color='success'
+                          variant='flat'
+                          className='h-1/2 min-w-10 px-2'
+                          onClick={() => hanndleMax(balance?.value)}
+                        >
+                          <span className='p-0 m-0'>Max</span>
+                        </Button>
+                      </div>
+                    }
                   />
                 </div>
                 <div style={{ marginTop: '64px' }}></div>
