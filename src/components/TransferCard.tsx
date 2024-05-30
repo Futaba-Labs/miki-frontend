@@ -25,6 +25,8 @@ import { arbitrumSepolia } from 'viem/chains'
 import { useAccount } from 'wagmi'
 import { useSearchParams } from 'next/navigation'
 import { EXAMPLE_DEPLOYMENT, DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI } from '@/utils'
+import { roundedNumber } from '@/utils/helper'
+import { useDepositAmount } from '@/hooks'
 import MikiCard from './MikiCard'
 
 export default function TransferCard() {
@@ -53,6 +55,7 @@ export default function TransferCard() {
   }, [selected])
 
   const { address } = useAccount()
+  const balance = useDepositAmount()
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const params = useSearchParams()
 
@@ -67,7 +70,14 @@ export default function TransferCard() {
   const relay = new GelatoRelay()
 
   const handleSetAmount = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => setAmount(parseFloat(e.target.value)),
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value
+      if (value === '') {
+        setAmount(0)
+      } else {
+        setAmount(parseFloat(value))
+      }
+    },
     [setAmount],
   )
 
@@ -75,6 +85,12 @@ export default function TransferCard() {
     (e: React.ChangeEvent<HTMLInputElement>) => setRecipient(e.target.value as `0x${string}`),
     [setRecipient],
   )
+
+  const hanndleMax = async (value: number) => {
+    if (value) {
+      setAmount(value - 0.001)
+    }
+  }
 
   const transfer = () => {
     if (amount <= 0) {
@@ -251,7 +267,24 @@ export default function TransferCard() {
                 ],
               }}
               defaultValue={amountParam ? amountParam.toString() : ''}
+              value={amount === 0 ? undefined : amount.toString()}
               onChange={handleSetAmount}
+              endContent={
+                <div className='flex gap-1  '>
+                  <div className='flex gap-1'>
+                    <span className='text-black text-sm'>Balance:</span>
+                    <span className='text-black text-sm'>{roundedNumber(balance, 4)}</span>
+                  </div>
+                  <Button
+                    color='success'
+                    variant='flat'
+                    className='h-1/2 min-w-10 px-2'
+                    onClick={() => hanndleMax(balance)}
+                  >
+                    <span className='p-0 m-0'>Max</span>
+                  </Button>
+                </div>
+              }
             />
             <Input
               type='text'
