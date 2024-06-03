@@ -68,8 +68,12 @@ export default function TransactionCard({ transaction }: Props) {
           </div>
         )}
       </td>
-      <td>{getProtocol(transaction.to)}</td>
-      <td className='rounded-r-[16px]'>{calculateTimeDifference(new Date(transaction.timestamp * 1000))}</td>
+      <td>
+        <p className='text-black'>{getProtocol(transaction.to)}</p>
+      </td>
+      <td className='rounded-r-[16px]'>
+        <p className='text-black'>{calculateTimeDifference(new Date(transaction.timestamp * 1000))}</p>
+      </td>
     </tr>
   )
 }

@@ -100,7 +100,7 @@ export default function TransactionDetail({ params }: { params: { id: string } }
           {transaction.asset && transaction.amount ? (
             <div className='flex gap-2'>
               <Image src={'/logo/ethereum.svg'} width={15} height={15} alt={'ethereum'} />
-              <span className='text-lg font-bold'>{formatEther(transaction.amount) + ' ETH'}</span>
+              <span className='text-lg font-bold text-black'>{formatEther(transaction.amount) + ' ETH'}</span>
             </div>
           ) : null}
 
@@ -111,7 +111,7 @@ export default function TransactionDetail({ params }: { params: { id: string } }
           {transaction.asset && transaction.receiveAmount ? (
             <div className='flex gap-2'>
               <Image src={'/logo/ethereum.svg'} width={15} height={15} alt={'ethereum'} />
-              <span className='text-lg font-bold'>{formatEther(transaction.receiveAmount) + ' ETH'}</span>
+              <span className='text-lg font-bold text-black'>{formatEther(transaction.receiveAmount) + ' ETH'}</span>
             </div>
           ) : null}
 

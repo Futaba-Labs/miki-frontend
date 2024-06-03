@@ -370,7 +370,7 @@ export default function TransferCard() {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className='flex flex-col gap-1'>Transfer Link</ModalHeader>
+              <ModalHeader className='flex flex-col gap-1 text-black'>Transfer Link</ModalHeader>
               <ModalBody>
                 <p className='text-black pb-2'>You can share this link with others to request token transfer.</p>
                 <span className='overflow-auto text-black'>{createTransferLink(amount, recipient, chainId)}</span>

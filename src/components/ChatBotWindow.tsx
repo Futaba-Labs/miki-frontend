@@ -296,6 +296,7 @@ export default function ChatBotWindow() {
             botAvatar={'/favicon.png'}
             steps={chatbotSteps}
             handleEnd={handleEnd}
+            inputStyle={{ color: 'black' }}
           />
         </div>
       </ThemeProvider>
@@ -303,33 +304,33 @@ export default function ChatBotWindow() {
         <ModalContent>
           {(onClose) => (
             <ModalContent>
-              <ModalHeader className='flex flex-col gap-1'>Transaction Summary</ModalHeader>
+              <ModalHeader className='flex flex-col gap-1 text-black'>Transaction Summary</ModalHeader>
               <ModalBody>
                 <div className='flex flex-col gap-2'>
                   <div className='flex flex-row justify-between'>
                     <p className='font-bold text-black'>Dapps</p>
-                    <p>{dapps}</p>
+                    <p className='text-black'>{dapps}</p>
                   </div>
                   {dapps === 'NFT' ? (
                     <div className='flex flex-row justify-between'>
                       <p className='font-bold text-black'>NFT</p>
-                      <p>{nftOption}</p>
+                      <p className='text-black'>{nftOption}</p>
                     </div>
                   ) : (
                     <div className='flex flex-row justify-between'>
                       <p className='font-bold text-black'>DeFi</p>
-                      <p>{defiOption}</p>
+                      <p className='text-black'>{defiOption}</p>
                     </div>
                   )}
                   <div className='flex flex-row justify-between'>
                     <p className='font-bold text-black'>Amount</p>
-                    <p>{ethers.formatEther(amount)}</p>
+                    <p className='text-black'>{ethers.formatEther(amount)}</p>
                   </div>
                   <div className='flex flex-row justify-between'>
                     <p className='font-bold text-black'>Destination chain</p>
                     <div className='flex flex-row gap-1'>
                       <Image src={getChainIconUrl(chain)} width={20} height={20} alt={convertToChainName(chain)} />
-                      <p>{convertToChainName(chain)}</p>
+                      <p className='text-black'>{convertToChainName(chain)}</p>
                     </div>
                   </div>
                 </div>
