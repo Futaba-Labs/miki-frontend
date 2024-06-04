@@ -4,7 +4,7 @@ import ChatBot from 'react-simple-chatbot'
 import { toast } from 'react-toastify'
 import { ThemeProvider } from 'styled-components'
 import { parseEther, encodeAbiParameters, createPublicClient, http, encodeFunctionData } from 'viem'
-import { useAccount } from 'wagmi'
+import { useAccount, useWriteContract } from 'wagmi'
 import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { arbitrumSepolia } from 'viem/chains'
 import { CallWithSyncFeeERC2771Request, GelatoRelay, TaskState } from '@gelatonetwork/relay-sdk'
@@ -19,8 +19,9 @@ import {
   useDisclosure,
 } from '@nextui-org/react'
 import { ethers } from 'ethers'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI, EXAMPLE_DEPLOYMENT } from '@/utils'
 import { convertToChainName, getChainIconUrl } from '@/utils/helper'
 
@@ -155,6 +156,8 @@ export default function ChatBotWindow() {
   const relay = new GelatoRelay()
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure()
+  const { writeContract, isPending, isSuccess, isError, data } = useWriteContract()
+  const addRecentTransaction = useAddRecentTransaction()
 
   const handleEnd = ({ values }: { values: Array<string> }) => {
     setChain(parseInt(values[3]))
@@ -172,7 +175,7 @@ export default function ChatBotWindow() {
     onOpen()
   }
 
-  const sendTxn = () => {
+  const relayTxn = () => {
     if (!address) {
       toast.error('Please connect your wallet', { position: 'bottom-right' })
       return
@@ -287,6 +290,83 @@ export default function ChatBotWindow() {
     })
   }
 
+  const sendTxn = async () => {
+    if (!address) {
+      toast.error('Please connect your wallet', { position: 'bottom-right' })
+      return
+    }
+
+    let functionName = ''
+    let args = []
+    if (dapps === 'NFT') {
+      const parsedAmount = parseEther(amount.toString())
+      const encodedRecipient = encodeAbiParameters([{ type: 'address', name: 'recipient' }], [address])
+      const _options = Options.newOptions().addExecutorLzReceiveOption(1000000, 0)
+      const params = encodeAbiParameters(
+        [
+          { type: 'bytes', name: 'options' },
+          { type: 'bytes', name: 'sgParams' },
+        ],
+        [_options.toHex() as `0x${string}`, '0x0'],
+      )
+      const nft = EXAMPLE_DEPLOYMENT[chain.toString()].nft
+
+      const fee = await client.readContract({
+        address: DEPLOYMENT.ethAdapter as `0x${string}`,
+        abi: ETH_ADAPTER_ABI,
+        functionName: 'estimateFee',
+        args: [address, chain, nft, nft, encodedRecipient, parsedAmount, params],
+      })
+      functionName = 'crossChainContractCall'
+      args = [chain, nft, encodedRecipient, fee, params]
+    } else {
+      const aave = EXAMPLE_DEPLOYMENT[chain.toString()].aave
+      const weth = EXAMPLE_DEPLOYMENT[chain.toString()].weth
+
+      const encodedMsg = encodeAbiParameters([{ type: 'address', name: 'weth' }], [weth!])
+
+      functionName = 'crossChainContractCallWithAsset'
+      args = [chain, aave, encodedMsg, 0, amount, '0x']
+    }
+
+    writeContract({
+      address: DEPLOYMENT.ethTokenPool as `0x${string}`,
+      abi: ETH_TOKEN_POOL_ABI,
+      functionName,
+      args,
+      value: BigInt(0),
+    })
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      if (data) {
+        addRecentTransaction({
+          hash: data,
+          description: 'Transfer',
+        })
+        if (dapps === 'NFT') {
+          toast.success(
+            <>
+              <p>Transfer successful!</p>
+              {'View on'}
+              <Link isExternal isBlock showAnchorIcon href={`https://testnet.layerzeroscan.com/tx/${data}`}>
+                LayerZero scan
+              </Link>
+            </>,
+            { position: 'bottom-right' },
+          )
+        } else {
+          toast.success('Transfer successful!', { position: 'bottom-right' })
+        }
+      } else {
+        toast.success('Transfer successful!', { position: 'bottom-right' })
+      }
+    } else if (isError) {
+      toast.error('Deposit failed', { position: 'bottom-right' })
+    }
+  }, [isSuccess, isError])
+
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -346,10 +426,18 @@ export default function ChatBotWindow() {
                 <Button
                   isLoading={loading}
                   radius='sm'
-                  onClick={sendTxn}
+                  onClick={relayTxn}
                   className='bg-button drop-shadow-button hover:bg-green-200 focus:ring'
                 >
                   <span className='text-green font-bold text-lg'>{loading ? 'Signing...' : 'Sign Txn'}</span>
+                </Button>
+                <Button
+                  isLoading={isPending}
+                  radius='sm'
+                  onClick={sendTxn}
+                  className='bg-button drop-shadow-button hover:bg-green-200 focus:ring'
+                >
+                  <span className='text-green font-bold text-lg'>{isPending ? 'Sending...' : 'Send Txn'}</span>
                 </Button>
               </ModalFooter>
             </ModalContent>

@@ -98,6 +98,14 @@ export const getChainIconUrl = (chainId: number) => {
       return '/logo/optimism.svg'
     case 84532:
       return '/logo/base.svg'
+    case 534351:
+      return '/logo/scroll.svg'
+    case 168587773:
+      return '/logo/blast.png'
+    case 300:
+      return '/logo/zksync.svg'
+    case 2442:
+      return '/logo/polygon.svg'
     default:
       return '/logo/arbitrum.svg'
   }
