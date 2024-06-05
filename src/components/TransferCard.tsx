@@ -27,6 +27,7 @@ import { useSearchParams } from 'next/navigation'
 import { EXAMPLE_DEPLOYMENT, DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI } from '@/utils'
 import { roundedNumber } from '@/utils/helper'
 import { useDepositAmount } from '@/hooks'
+import { CHAIN_ID } from '@/utils/constants'
 import MikiCard from './MikiCard'
 
 export default function TransferCard() {
@@ -70,13 +71,8 @@ export default function TransferCard() {
   const relay = new GelatoRelay()
 
   const handleSetAmount = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value
-      if (value === '') {
-        setAmount(0)
-      } else {
-        setAmount(parseFloat(value))
-      }
+    (value: string) => {
+      setAmount(parseFloat(value))
     },
     [setAmount],
   )
@@ -105,6 +101,21 @@ export default function TransferCard() {
 
     if (selectedValue === 'Select Chain') {
       toast.error('Select chain', { position: 'bottom-right' })
+      return
+    }
+
+    if (chainId !== CHAIN_ID) {
+      toast.error('Please connect to Arbitrum Sepolia', { position: 'bottom-right' })
+      return
+    }
+
+    if (balance) {
+      if (parseEther(balance.toString()) < parseEther((amount - 0.001).toString())) {
+        toast.error('Insufficient balance', { position: 'bottom-right' })
+        return
+      }
+    } else {
+      toast.error('Unable to fetch balance', { position: 'bottom-right' })
       return
     }
 
@@ -244,10 +255,12 @@ export default function TransferCard() {
 
           <div className='flex flex-col items-end w-full gap-4'>
             <Input
-              type='text'
+              type='number'
               label='Amount'
               labelPlacement='outside'
-              placeholder='0.01'
+              placeholder='0'
+              min={0}
+              step='any'
               radius='sm'
               className='w-128'
               classNames={{
@@ -267,8 +280,8 @@ export default function TransferCard() {
                 ],
               }}
               defaultValue={amountParam ? amountParam.toString() : ''}
-              value={amount === 0 ? undefined : amount.toString()}
-              onChange={handleSetAmount}
+              value={amount.toString()}
+              onValueChange={handleSetAmount}
               endContent={
                 <div className='flex gap-1  '>
                   <div className='flex gap-1'>
