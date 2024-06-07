@@ -120,7 +120,7 @@ export default function TransactionDetail({ params }: { params: { id: string } }
               <Image src={chainIcon} width={25} height={25} alt={transaction.dstChainId.toString()} />
               <p className='text-lg text-black'>{convertToChainName(parseInt(transaction.dstChainId.toString()))}</p>
             </div>
-            <Link isExternal isBlock showAnchorIcon href={getExploerUrl(421614) + 'address/' + transaction.to}>
+            <Link isExternal isBlock showAnchorIcon href={getExploerUrl(421614) + '/address/' + transaction.to}>
               <span className='text-lg'>{omitText(transaction.to, 8, 8)}</span>
             </Link>
           </div>
@@ -168,7 +168,7 @@ export default function TransactionDetail({ params }: { params: { id: string } }
                   isExternal
                   isBlock
                   showAnchorIcon
-                  href={getExploerUrl(dstChainId) + 'tx/' + transaction.resTransaction.hash}
+                  href={getExploerUrl(dstChainId) + '/tx/' + transaction.resTransaction.hash}
                   className='mb-6'
                 >
                   {omitText(transaction.resTransaction.hash, 12, 12)}
@@ -183,7 +183,7 @@ export default function TransactionDetail({ params }: { params: { id: string } }
                   isExternal
                   isBlock
                   showAnchorIcon
-                  href={getExploerUrl(dstChainId) + 'address/' + transaction.resTransaction.from}
+                  href={getExploerUrl(dstChainId) + '/address/' + transaction.resTransaction.from}
                   className='mb-6'
                 >
                   {omitText(transaction.resTransaction.from, 12, 12)}

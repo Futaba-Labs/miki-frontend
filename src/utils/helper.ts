@@ -1,3 +1,5 @@
+import { extractChain } from "viem";
+import * as chains from 'viem/chains'
 import { ChipColor } from "@/types";
 
 export const roundedNumber = (num: number, decimal: number) => {
@@ -68,26 +70,20 @@ export const calculateTimeDifference = (craetedAt: Date) => {
 }
 
 export const getExploerUrl = (chainId: number): string => {
-  switch (chainId) {
-    case 5:
-      return 'https://goerli.etherscan.io/'
-    case 11155111:
-      return 'https://sepolia.etherscan.io/'
-    case 420:
-      return 'https://goerli-optimism.etherscan.io/'
-    case 80001:
-      return 'https://mumbai.polygonscan.com/'
-    case 421613:
-      return 'https://goerli.arbiscan.io/'
-    case 421614:
-      return 'https://sepolia.arbiscan.io/'
-    case 11155420:
-      return 'https://sepolia-optimism.etherscan.io/'
-    case 84532:
-      return 'https://sepolia.basescan.org/'
-    default:
-      return 'https://mumbai.polygonscan.com/'
+
+  const chain = extractChain({
+    chains: Object.values(chains),
+    // eslint-disable-next-line
+    // @ts-ignore
+    id: chainId,
+  })
+
+  const explorer = chain.blockExplorers
+  if (explorer) {
+    return explorer.default.url
   }
+
+  return ''
 }
 
 export const getChainIconUrl = (chainId: number) => {
@@ -104,8 +100,10 @@ export const getChainIconUrl = (chainId: number) => {
       return '/logo/blast.png'
     case 300:
       return '/logo/zksync.svg'
-    case 2442:
+    case 80002:
       return '/logo/polygon.svg'
+    case 5003:
+      return '/logo/mantle.svg'
     default:
       return '/logo/arbitrum.svg'
   }

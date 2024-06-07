@@ -22,6 +22,14 @@ export type Transaction = {
   timestamp: number
 }
 
+export type Chain = {
+  id: number
+  name: string
+  rpc: string
+  explorer: string
+  logo: string
+}
+
 export type ChipColor = 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
 
 

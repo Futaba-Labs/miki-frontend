@@ -42,12 +42,12 @@ export default function TransactionCard({ transaction }: Props) {
       </td>
 
       <td>
-        <Link isExternal isBlock showAnchorIcon href={getExploerUrl(421614) + 'tx/' + transaction.reqTransaction.hash}>
+        <Link isExternal isBlock showAnchorIcon href={getExploerUrl(421614) + '/tx/' + transaction.reqTransaction.hash}>
           {omitText(transaction.reqTransaction.hash, 8, 8)}
         </Link>
       </td>
       <td>
-        <Link isExternal isBlock showAnchorIcon href={getExploerUrl(421614) + 'address/' + transaction.sender}>
+        <Link isExternal isBlock showAnchorIcon href={getExploerUrl(421614) + '/address/' + transaction.sender}>
           {omitText(transaction.sender, 8, 8)}
         </Link>
       </td>
@@ -60,7 +60,7 @@ export default function TransactionCard({ transaction }: Props) {
               isBlock
               showAnchorIcon
               href={
-                getExploerUrl(parseInt(transaction.dstChainId.toString())) + 'tx/' + transaction.resTransaction.hash
+                getExploerUrl(parseInt(transaction.dstChainId.toString())) + '/tx/' + transaction.resTransaction.hash
               }
             >
               {omitText(transaction.resTransaction.hash, 8, 8)}
