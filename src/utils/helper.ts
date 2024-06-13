@@ -1,5 +1,3 @@
-import { extractChain } from "viem";
-import * as chains from 'viem/chains'
 import { ChipColor } from "@/types";
 
 export const roundedNumber = (num: number, decimal: number) => {
@@ -30,6 +28,8 @@ export const convertToChainName = (chainId: number): string => {
       return 'Optimism Sepolia'
     case 84532:
       return 'Base Sepolia'
+    case 5003:
+      return 'Mantle Sepolia'
     default:
       return 'Arbitrum Sepolia'
   }
@@ -71,16 +71,15 @@ export const calculateTimeDifference = (craetedAt: Date) => {
 
 export const getExploerUrl = (chainId: number): string => {
 
-  const chain = extractChain({
-    chains: Object.values(chains),
-    // eslint-disable-next-line
-    // @ts-ignore
-    id: chainId,
-  })
-
-  const explorer = chain.blockExplorers
-  if (explorer) {
-    return explorer.default.url
+  switch (chainId) {
+    case 421614:
+      return 'https://sepolia.arbiscan.io'
+    case 11155420:
+      return 'https://sepolia-optimism.etherscan.io'
+    case 84532:
+      return 'https://sepolia.basescan.org'
+    case 5003:
+      return 'https://explorer.sepolia.mantle.xyz'
   }
 
   return ''

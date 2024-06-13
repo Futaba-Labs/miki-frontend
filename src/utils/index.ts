@@ -5,6 +5,7 @@ import L2_ASSET_MANAGER_ABI from './constants/l2_asset_manager.abi.json'
 import * as helper from './helper'
 import * as config from './config'
 import * as constants from './constants'
+import * as axelar from './axelar'
 
 export {
   DEPLOYMENT,
@@ -15,4 +16,5 @@ export {
   helper,
   config,
   constants,
+  axelar,
 }

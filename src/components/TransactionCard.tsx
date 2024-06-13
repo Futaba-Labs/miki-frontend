@@ -16,6 +16,8 @@ const getProtocol = (to: string) => {
       return 'NFT Mint'
     case '0xaad783b36b84ad14979ce68deecb390523784502':
       return 'NFT Mint'
+    case '0xAEe4c88c930447e1c8eD0D170cfC828475b89ade'.toLowerCase():
+      return 'NFT Mint'
     case '0xb49D3728F8C069866260B682941F57Bd389669f7'.toLowerCase():
       return 'AAVE Deposit'
     case '0xb50201558B00496A145fE76f7424749556E326D8'.toLowerCase():

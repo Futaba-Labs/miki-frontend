@@ -24,6 +24,7 @@ import Image from 'next/image'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI, EXAMPLE_DEPLOYMENT } from '@/utils'
 import { convertToChainName, getChainIconUrl } from '@/utils/helper'
+import { getFee } from '@/utils/axelar'
 
 const theme = {
   background: '#f5f8fb',
@@ -130,6 +131,7 @@ export default function ChatBotWindow() {
       options: [
         { value: '11155420', label: 'Optimism Sepolia', trigger: '32' },
         { value: '84532', label: 'Base Sepolia', trigger: '32' },
+        { value: '5003', label: 'Mantle Sepolia', trigger: '32' },
       ],
     },
     {
@@ -199,12 +201,17 @@ export default function ChatBotWindow() {
         )
         const nft = EXAMPLE_DEPLOYMENT[chain.toString()].nft
 
-        const fee = await client.readContract({
-          address: DEPLOYMENT.ethAdapter as `0x${string}`,
-          abi: ETH_ADAPTER_ABI,
-          functionName: 'estimateFee',
-          args: [address, chain, nft, nft, encodedRecipient, parsedAmount, params],
-        })
+        let fee = BigInt(0)
+        if (chain === 5003) {
+          fee = await getFee()
+        } else {
+          fee = (await client.readContract({
+            address: DEPLOYMENT.ethAdapter as `0x${string}`,
+            abi: ETH_ADAPTER_ABI,
+            functionName: 'estimateFee',
+            args: [address, chain, nft, nft, encodedRecipient, parsedAmount, params],
+          })) as bigint
+        }
 
         data = encodeFunctionData({
           abi: ETH_TOKEN_POOL_ABI,
@@ -259,9 +266,13 @@ export default function ChatBotWindow() {
                   isExternal
                   isBlock
                   showAnchorIcon
-                  href={`https://testnet.layerzeroscan.com/tx/${status.transactionHash}`}
+                  href={
+                    chain === 5003
+                      ? `https://testnet.axelarscan.io/gmp/${status.transactionHash}`
+                      : `https://testnet.layerzeroscan.com/tx/${status.transactionHash}`
+                  }
                 >
-                  LayerZero scan
+                  {chain === 5003 ? 'Axelar scan' : 'LayerZero scan'}
                 </Link>
               </>,
               { position: 'bottom-right' },
@@ -410,6 +421,7 @@ export default function ChatBotWindow() {
                     <p className='font-bold text-black'>Destination chain</p>
                     <div className='flex flex-row gap-1'>
                       <Image src={getChainIconUrl(chain)} width={20} height={20} alt={convertToChainName(chain)} />
+
                       <p className='text-black'>{convertToChainName(chain)}</p>
                     </div>
                   </div>
