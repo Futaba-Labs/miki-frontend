@@ -18,9 +18,13 @@ const getProtocol = (to: string) => {
       return 'NFT Mint'
     case '0xAEe4c88c930447e1c8eD0D170cfC828475b89ade'.toLowerCase():
       return 'NFT Mint'
+    case '0x512D68181dDb00f1f3fe5BCA28dD8B5cf2F98Cd0'.toLowerCase():
+      return 'NFT Mint'
     case '0xb49D3728F8C069866260B682941F57Bd389669f7'.toLowerCase():
       return 'AAVE Deposit'
     case '0xb50201558B00496A145fE76f7424749556E326D8'.toLowerCase():
+      return 'AAVE Deposit'
+    case '0x3b5495960F3214cb1Cc893b21A31BE86F1F2a3b9'.toLowerCase():
       return 'AAVE Deposit'
     default:
       return 'Magic Transfer'
@@ -55,8 +59,17 @@ export default function TransactionCard({ transaction }: Props) {
       </td>
       <td>
         {transaction.resTransaction && (
-          <div className='flex gap-1'>
-            <Image src={chainIcon} width={20} height={20} alt={transaction.dstChainId.toString()} />
+          <div className='flex'>
+            <div className='flex rounded-full items-center justify-center'>
+              <Image
+                src={chainIcon}
+                width={20}
+                height={20}
+                alt={transaction.dstChainId.toString()}
+                className='rounded-full'
+              />
+            </div>
+
             <Link
               isExternal
               isBlock

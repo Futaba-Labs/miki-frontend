@@ -14,6 +14,10 @@ export const convertToChainId = (chain: string, mainnet: boolean): number => {
         return 11155420
       case 'base':
         return 84532
+      case 'mantle':
+        return 5003
+      case 'scroll':
+        return 534351
       default:
         return 0
     }
@@ -30,6 +34,8 @@ export const convertToChainName = (chainId: number): string => {
       return 'Base Sepolia'
     case 5003:
       return 'Mantle Sepolia'
+    case 534351:
+      return 'Scroll Sepolia'
     default:
       return 'Arbitrum Sepolia'
   }
@@ -80,6 +86,8 @@ export const getExploerUrl = (chainId: number): string => {
       return 'https://sepolia.basescan.org'
     case 5003:
       return 'https://explorer.sepolia.mantle.xyz'
+    case 534351:
+      return 'https://sepolia.scrollscan.com'
   }
 
   return ''
