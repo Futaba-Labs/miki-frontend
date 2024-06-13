@@ -6,6 +6,7 @@ import { formatEther, parseEther } from 'viem'
 import { toast } from 'react-toastify'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
 import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
+import { CHAIN_ID } from '@/utils/constants'
 import { roundedNumber } from '@/utils/helper'
 import MikiCard from './MikiCard'
 
@@ -17,7 +18,7 @@ const items = [
 export default function AccountOperations() {
   const [amount, setAmount] = useState(0)
 
-  const { address } = useAccount()
+  const { address, chainId } = useAccount()
   const { data: balance, refetch: refetchBalance } = useBalance({
     address: address as `0x${string}`,
   })
@@ -32,10 +33,21 @@ export default function AccountOperations() {
   }, [selected])
 
   const handleDeposit = () => {
-    if (amount === 0) {
-      toast.error('Amount must be greater than 0', { position: 'bottom-right' })
+    if (chainId !== CHAIN_ID) {
+      toast.error('Please connect to Arbitrum Sepolia', { position: 'bottom-right' })
       return
     }
+
+    if (balance) {
+      if (balance.value < parseEther((amount - 0.001).toString())) {
+        toast.error('Insufficient balance', { position: 'bottom-right' })
+        return
+      }
+    } else {
+      toast.error('Unable to fetch balance', { position: 'bottom-right' })
+      return
+    }
+
     writeContract({
       abi: L2_ASSET_MANAGER_ABI,
       address: DEPLOYMENT.l2AssetManager as `0x${string}`,
@@ -51,11 +63,7 @@ export default function AccountOperations() {
 
   const handleSetAmount = useCallback(
     (value: string) => {
-      if (value === '') {
-        setAmount(0)
-      } else {
-        setAmount(parseFloat(value))
-      }
+      setAmount(parseFloat(value))
     },
     [setAmount],
   )
@@ -139,11 +147,13 @@ export default function AccountOperations() {
               <div className='flex items-end gap-2 w-full'>
                 <div>
                   <Input
-                    type='text'
+                    type='number'
                     label='Amount'
                     labelPlacement='outside'
                     placeholder='0'
                     radius='sm'
+                    min={0}
+                    step='any'
                     className='w-80'
                     classNames={{
                       label: 'text-black text-sm',
@@ -161,8 +171,8 @@ export default function AccountOperations() {
                         '!cursor-text',
                       ],
                     }}
-                    onChange={(e) => handleSetAmount(e.target.value)}
-                    value={amount === 0 ? undefined : amount.toString()}
+                    onValueChange={handleSetAmount}
+                    value={amount.toString()}
                     endContent={
                       <div className='flex gap-1  '>
                         <div className='flex gap-1'>

@@ -18,9 +18,12 @@
   },
   "devDependencies": {
     "@apollo/client": "^3.10.3",
+    "@axelar-network/axelarjs-sdk": "^0.16.1",
     "@gelatonetwork/relay-sdk": "^5.5.6",
     "@layerzerolabs/lz-v2-utilities": "^2.3.1",
     "@rainbow-me/rainbowkit": "^2.0.2",
+    "@supabase/ssr": "^0.3.0",
+    "@supabase/supabase-js": "^2.43.4",
     "@tanstack/react-query": "^5.28.4",
     "@types/node": "^20",
     "@types/react": "^18",
