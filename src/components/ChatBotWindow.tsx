@@ -72,9 +72,9 @@ export default function ChatBotWindow() {
     {
       id: '6',
       options: [
-        { value: 'NFT1', label: 'NFT1', trigger: '30' },
-        { value: 'NFT2', label: 'NFT2', trigger: '30' },
-        { value: 'NFT3', label: 'NFT3', trigger: '30' },
+        { value: 'NFT1', label: 'NFT1', trigger: '9' },
+        { value: 'NFT2', label: 'NFT2', trigger: '9' },
+        { value: 'NFT3', label: 'NFT3', trigger: '9' },
       ],
     },
     {
@@ -85,9 +85,25 @@ export default function ChatBotWindow() {
     {
       id: '8',
       options: [
-        { value: 'NFT1', label: 'NFT1', trigger: '30' },
-        { value: 'NFT2', label: 'NFT2', trigger: '30' },
-        { value: 'NFT3', label: 'NFT3', trigger: '30' },
+        { value: 'NFT1', label: 'NFT1', trigger: '9' },
+        { value: 'NFT2', label: 'NFT2', trigger: '9' },
+        { value: 'NFT3', label: 'NFT3', trigger: '9' },
+      ],
+    },
+    {
+      id: '9',
+      message: 'Which chain do you want to execute the transaction on?',
+      trigger: 'chainNFT',
+    },
+    {
+      id: 'chainNFT',
+      options: [
+        { value: '11155420', label: 'Optimism Sepolia', trigger: '32' },
+        { value: '84532', label: 'Base Sepolia', trigger: '32' },
+        { value: '5003', label: 'Mantle Sepolia', trigger: '32' },
+        { value: '534351', label: 'Scroll Sepolia', trigger: '32' },
+        { value: '43113', label: 'Avalanche Fuji', trigger: '32' },
+        { value: '97', label: 'BNB Testnet', trigger: '32' },
       ],
     },
     {
@@ -124,14 +140,14 @@ export default function ChatBotWindow() {
     {
       id: '30',
       message: 'Which chain do you want to execute the transaction on?',
-      trigger: 'chain',
+      trigger: 'chainLending',
     },
     {
-      id: 'chain',
+      id: 'chainLending',
       options: [
         { value: '11155420', label: 'Optimism Sepolia', trigger: '32' },
         { value: '84532', label: 'Base Sepolia', trigger: '32' },
-        { value: '5003', label: 'Mantle Sepolia', trigger: '32' },
+        { value: '534351', label: 'Scroll Sepolia', trigger: '32' },
       ],
     },
     {
@@ -297,7 +313,7 @@ export default function ChatBotWindow() {
         }
 
         retry++
-      }, 3000)
+      }, 3000) as NodeJS.Timeout
     })
   }
 

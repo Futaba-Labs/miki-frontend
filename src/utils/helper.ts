@@ -14,6 +14,14 @@ export const convertToChainId = (chain: string, mainnet: boolean): number => {
         return 11155420
       case 'base':
         return 84532
+      case 'mantle':
+        return 5003
+      case 'scroll':
+        return 534351
+      case 'avalanche':
+        return 43113
+      case 'bnb':
+        return 97
       default:
         return 0
     }
@@ -30,6 +38,12 @@ export const convertToChainName = (chainId: number): string => {
       return 'Base Sepolia'
     case 5003:
       return 'Mantle Sepolia'
+    case 534351:
+      return 'Scroll Sepolia'
+    case 43113:
+      return "Avalanche Fuji"
+    case 97:
+      return "BNB Testnet"
     default:
       return 'Arbitrum Sepolia'
   }
@@ -80,6 +94,12 @@ export const getExploerUrl = (chainId: number): string => {
       return 'https://sepolia.basescan.org'
     case 5003:
       return 'https://explorer.sepolia.mantle.xyz'
+    case 534351:
+      return 'https://sepolia.scrollscan.com'
+    case 43113:
+      return "https://testnet.snowtrace.io"
+    case 97:
+      return "https://testnet.bscscan.com"
   }
 
   return ''
@@ -103,6 +123,10 @@ export const getChainIconUrl = (chainId: number) => {
       return '/logo/polygon.svg'
     case 5003:
       return '/logo/mantle.svg'
+    case 43113:
+      return '/logo/avalanche.svg'
+    case 97:
+      return '/logo/bnb.svg'
     default:
       return '/logo/arbitrum.svg'
   }

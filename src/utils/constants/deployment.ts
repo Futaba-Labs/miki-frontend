@@ -21,5 +21,20 @@ export const EXAMPLE_DEPLOYMENT: Record<string, Partial<Record<string, `0x${stri
     "aave": "0xb49D3728F8C069866260B682941F57Bd389669f7",
     "weth": "0x4200000000000000000000000000000000000006"
   },
+  ["534351"]: {
+    "nft": "0x512D68181dDb00f1f3fe5BCA28dD8B5cf2F98Cd0",
+    "aave": "0x3b5495960F3214cb1Cc893b21A31BE86F1F2a3b9",
+    "weth": "0xb123dCe044EdF0a755505d9623Fba16C0F41cae9"
+  },
+  ["43113"]: {
+    "nft": "0xAEe4c88c930447e1c8eD0D170cfC828475b89ade",
+    "aave": "0x3b5495960F3214cb1Cc893b21A31BE86F1F2a3b9",
+    "weth": "0xb123dCe044EdF0a755505d9623Fba16C0F41cae9"
+  },
+  ["97"]: {
+    "nft": "0xAEe4c88c930447e1c8eD0D170cfC828475b89ade",
+    "aave": "0x3b5495960F3214cb1Cc893b21A31BE86F1F2a3b9",
+    "weth": "0xb123dCe044EdF0a755505d9623Fba16C0F41cae9"
+  }
 }
 
