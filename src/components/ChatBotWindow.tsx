@@ -102,6 +102,7 @@ export default function ChatBotWindow() {
         { value: '84532', label: 'Base Sepolia', trigger: '32' },
         { value: '5003', label: 'Mantle Sepolia', trigger: '32' },
         { value: '534351', label: 'Scroll Sepolia', trigger: '32' },
+        { value: '43113', label: 'Avalanche Fuji', trigger: '32' },
       ],
     },
     {
@@ -311,7 +312,7 @@ export default function ChatBotWindow() {
         }
 
         retry++
-      }, 3000)
+      }, 3000) as NodeJS.Timeout
     })
   }
 
