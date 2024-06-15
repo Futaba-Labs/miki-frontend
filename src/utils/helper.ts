@@ -20,6 +20,8 @@ export const convertToChainId = (chain: string, mainnet: boolean): number => {
         return 534351
       case 'avalanche':
         return 43113
+      case 'bnb':
+        return 97
       default:
         return 0
     }
@@ -40,6 +42,8 @@ export const convertToChainName = (chainId: number): string => {
       return 'Scroll Sepolia'
     case 43113:
       return "Avalanche Fuji"
+    case 97:
+      return "BNB Testnet"
     default:
       return 'Arbitrum Sepolia'
   }
@@ -94,6 +98,8 @@ export const getExploerUrl = (chainId: number): string => {
       return 'https://sepolia.scrollscan.com'
     case 43113:
       return "https://testnet.snowtrace.io"
+    case 97:
+      return "https://testnet.bscscan.com"
   }
 
   return ''
@@ -119,6 +125,8 @@ export const getChainIconUrl = (chainId: number) => {
       return '/logo/mantle.svg'
     case 43113:
       return '/logo/avalanche.svg'
+    case 97:
+      return '/logo/bnb.svg'
     default:
       return '/logo/arbitrum.svg'
   }
