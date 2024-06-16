@@ -4,7 +4,8 @@ import { Chip, Link } from '@nextui-org/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { CrossChainTransaction } from '@/types'
-import { calculateTimeDifference, omitText, getExploerUrl, getChainIconUrl, getColor } from '@/utils/helper'
+import { calculateTimeDifference, omitText, getColor } from '@/utils/helper'
+import { getChainIconUrl, getExploerUrl } from '@/utils/constants/chain'
 
 type Props = {
   transaction: CrossChainTransaction

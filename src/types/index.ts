@@ -24,8 +24,6 @@ export type Transaction = {
 
 export type Chain = {
   id: number
-  name: string
-  rpc: string
   explorer: string
   logo: string
 }
