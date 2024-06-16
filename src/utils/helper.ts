@@ -22,6 +22,8 @@ export const convertToChainId = (chain: string, mainnet: boolean): number => {
         return 43113
       case 'bnb':
         return 97
+      case "blast":
+        return 168587773
       default:
         return 0
     }
@@ -44,6 +46,8 @@ export const convertToChainName = (chainId: number): string => {
       return "Avalanche Fuji"
     case 97:
       return "BNB Testnet"
+    case 168587773:
+      return "Blast Sepolia"
     default:
       return 'Arbitrum Sepolia'
   }
@@ -100,6 +104,8 @@ export const getExploerUrl = (chainId: number): string => {
       return "https://testnet.snowtrace.io"
     case 97:
       return "https://testnet.bscscan.com"
+    case 168587773:
+      return "https://testnet.blastscan.io"
   }
 
   return ''

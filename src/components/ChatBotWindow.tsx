@@ -104,6 +104,7 @@ export default function ChatBotWindow() {
         { value: '534351', label: 'Scroll Sepolia', trigger: '32' },
         { value: '43113', label: 'Avalanche Fuji', trigger: '32' },
         { value: '97', label: 'BNB Testnet', trigger: '32' },
+        { value: '168587773', label: 'Blast Sepolia', trigger: '32' },
       ],
     },
     {
@@ -436,8 +437,15 @@ export default function ChatBotWindow() {
                   <div className='flex flex-row justify-between'>
                     <p className='font-bold text-black'>Destination chain</p>
                     <div className='flex flex-row gap-1'>
-                      <Image src={getChainIconUrl(chain)} width={20} height={20} alt={convertToChainName(chain)} />
-
+                      <div className='flex rounded-full items-center justify-center'>
+                        <Image
+                          src={getChainIconUrl(chain)}
+                          width={20}
+                          height={20}
+                          alt={convertToChainName(chain)}
+                          className='rounded-full'
+                        />
+                      </div>
                       <p className='text-black'>{convertToChainName(chain)}</p>
                     </div>
                   </div>
