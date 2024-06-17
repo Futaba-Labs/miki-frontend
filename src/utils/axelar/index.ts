@@ -8,7 +8,7 @@ export const getFee = async () => {
   const fee = await sdk.estimateGasFee(
     "arbitrum-sepolia",
     "mantle-sepolia",
-    500000
+    500000000
   );
 
   return BigInt(fee.toString())
