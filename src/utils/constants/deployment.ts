@@ -1,45 +1,57 @@
-export const DEPLOYMENT: Record<string, string> = {
+import { zeroAddress } from "viem"
+import { ChainKey, getChainKey } from "./chain"
+
+export const CORE_DEPLOYMENT: Record<string, string> = {
   "ethTokenPool": "0x6a509D7d555d041E606F6ff8b90f371c9a03Bfca",
   "usdcTokenPool": "0xd4dBE3f0C4351623f0802d1482F0336C89652F1d",
   "l2AssetManager": "0xCE18358DaE886C8c8a8697712Af35fA7bF6227CF",
   "ethAdapter": "0x9B20e595ee83dc514A8cE4be885ceCE14957E78C",
 }
 
-export const EXAMPLE_DEPLOYMENT: Record<string, Partial<Record<string, `0x${string}`>>> = {
-  ["84532"]: {
+export const EXAMPLE_DEPLOYMENT: Record<ChainKey, Partial<Record<string, `0x${string}`>>> = {
+  [ChainKey.ARBITRUM_SEPOLIA]: {
+    "nft": zeroAddress,
+    "aave": zeroAddress,
+    "weth": zeroAddress
+  },
+  [ChainKey.BASE_SEPOLIA]: {
     "nft": "0x6a7A87ae550dD0190f7c844a51a7F9f258EFBdA5",
     "aave": "0xb49D3728F8C069866260B682941F57Bd389669f7",
     "weth": "0x4200000000000000000000000000000000000006"
   },
-  ["11155420"]: {
+  [ChainKey.OPTIMISM_SEPOLIA]: {
     "nft": "0xaaD783B36B84Ad14979Ce68DeECb390523784502",
     "aave": "0x71095b39aF9293c57c4904ab3c3A3755183c58f6",
     "weth": "0x4200000000000000000000000000000000000006"
   },
-  ["5003"]: {
+  [ChainKey.MANTLE_SEPOLIA]: {
     "nft": "0xAEe4c88c930447e1c8eD0D170cfC828475b89ade",
-    "aave": "0xb49D3728F8C069866260B682941F57Bd389669f7",
-    "weth": "0x4200000000000000000000000000000000000006"
+    "aave": zeroAddress,
+    "weth": zeroAddress
   },
-  ["534351"]: {
+  [ChainKey.SCROLL_SEPOLIA]: {
     "nft": "0x512D68181dDb00f1f3fe5BCA28dD8B5cf2F98Cd0",
     "aave": "0x3b5495960F3214cb1Cc893b21A31BE86F1F2a3b9",
     "weth": "0xb123dCe044EdF0a755505d9623Fba16C0F41cae9"
   },
-  ["43113"]: {
+  [ChainKey.AVALANCHE_FUJI]: {
     "nft": "0xAEe4c88c930447e1c8eD0D170cfC828475b89ade",
-    "aave": "0x3b5495960F3214cb1Cc893b21A31BE86F1F2a3b9",
-    "weth": "0xb123dCe044EdF0a755505d9623Fba16C0F41cae9"
+    "aave": zeroAddress,
+    "weth": zeroAddress
   },
-  ["97"]: {
+  [ChainKey.BNB_TESTNET]: {
     "nft": "0xAEe4c88c930447e1c8eD0D170cfC828475b89ade",
-    "aave": "0x3b5495960F3214cb1Cc893b21A31BE86F1F2a3b9",
-    "weth": "0xb123dCe044EdF0a755505d9623Fba16C0F41cae9"
+    "aave": zeroAddress,
+    "weth": zeroAddress
   },
-  ["168587773"]: {
+  [ChainKey.BLAST_SEPOLIA]: {
     "nft": "0xAEe4c88c930447e1c8eD0D170cfC828475b89ade",
-    "aave": "0x3b5495960F3214cb1Cc893b21A31BE86F1F2a3b9",
-    "weth": "0xb123dCe044EdF0a755505d9623Fba16C0F41cae9"
+    "aave": zeroAddress,
+    "weth": zeroAddress
   },
 }
 
+export const getDeploymentAddress = (chainId: number) => {
+  const chainKey = getChainKey(chainId)
+  return EXAMPLE_DEPLOYMENT[chainKey]
+}

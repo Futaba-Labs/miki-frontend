@@ -6,7 +6,8 @@ import { Spinner, Chip, Link, Skeleton } from '@nextui-org/react'
 import Image from 'next/image'
 import { formatEther } from 'viem'
 import { CrossChainTransaction } from '@/types'
-import { convertToChainName, getChainIconUrl, getColor, getExploerUrl, omitText } from '@/utils/helper'
+import { getChainIconUrl, getExploerUrl, convertToChainName } from '@/utils/constants/chain'
+import { getColor, omitText } from '@/utils/helper'
 import MikiCard from './MikiCard'
 
 const GET_TRANSACTION = gql`
@@ -55,9 +56,8 @@ export default function TransactionDetail({ params }: { params: { id: string } }
     const intervalId = setInterval(() => {
       refetch()
     }, 10000)
-
     return () => {
-      clearInterval(intervalId)
+      clearInterval(intervalId as unknown as number)
     }
   }, [])
 

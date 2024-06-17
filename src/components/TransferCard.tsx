@@ -24,17 +24,24 @@ import { createPublicClient, http, parseEther, encodeAbiParameters, encodeFuncti
 import { arbitrumSepolia } from 'viem/chains'
 import { useAccount } from 'wagmi'
 import { useSearchParams } from 'next/navigation'
-import { EXAMPLE_DEPLOYMENT, DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI } from '@/utils'
+import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI } from '@/utils'
 import { roundedNumber } from '@/utils/helper'
 import { useDepositAmount } from '@/hooks'
 import { CHAIN_ID } from '@/utils/constants'
+import { getDeploymentAddress } from '@/utils/constants/deployment'
+import { getMagicTransferChainKeys, getChainIdByChainKey, getChainIconUrl, ChainKey } from '@/utils/constants/chain'
 import MikiCard from './MikiCard'
 
+const getChainOptions = () => {
+  const chains = getMagicTransferChainKeys()
+  return chains.map((chain) => {
+    const chainId = getChainIdByChainKey(chain)
+    return { key: chain, value: chain, chainId: chainId }
+  })
+}
+
 export default function TransferCard() {
-  const chains = [
-    { key: 'Optimism', value: 'optimism', chainId: 11155420 },
-    { key: 'Base', value: 'base', chainId: 84532 },
-  ]
+  const chains = getChainOptions()
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [selected, setSelected] = useState<any>(new Set(['Select Chain']))
@@ -54,6 +61,8 @@ export default function TransferCard() {
 
     return value
   }, [selected])
+
+  console.log(`selected value: ${selectedValue}`)
 
   const { address } = useAccount()
   const balance = useDepositAmount()
@@ -123,6 +132,7 @@ export default function TransferCard() {
 
     /* eslint-disable no-async-promise-executor */
     return new Promise<void>(async (resolve, reject) => {
+      const deployment = getDeploymentAddress(chainId)
       const parsedAmount = parseEther(amount.toString())
       const encodedRecipient = encodeAbiParameters([{ type: 'address', name: 'recipient' }], [recipient])
       const _options = Options.newOptions().addExecutorLzReceiveOption(1000000, 0)
@@ -133,7 +143,7 @@ export default function TransferCard() {
         ],
         [_options.toHex() as `0x${string}`, '0x0'],
       )
-      const nft = EXAMPLE_DEPLOYMENT[chainId.toString()].nft
+      const nft = deployment.nft
 
       const fee = await client.readContract({
         address: DEPLOYMENT.ethAdapter as `0x${string}`,
@@ -189,19 +199,19 @@ export default function TransferCard() {
             { position: 'bottom-right' },
           )
           setLoading(false)
-          clearInterval(intervalId)
+          clearInterval(intervalId as unknown as number)
         }
 
         if (status?.taskState === TaskState.ExecReverted || status?.taskState === TaskState.Cancelled) {
           toast.error('Transfer failed', { position: 'bottom-right' })
           setLoading(false)
-          clearInterval(intervalId)
+          clearInterval(intervalId as unknown as number)
         }
 
         if (retry > 5) {
           toast.error('Timeout', { position: 'bottom-right' })
           setLoading(false)
-          clearInterval(intervalId)
+          clearInterval(intervalId as unknown as number)
         }
 
         retry++
@@ -337,7 +347,15 @@ export default function TransferCard() {
               startContent={
                 selectedValue !== '' &&
                 selectedValue !== 'Select Chain' && (
-                  <Image src={`/logo/${selectedValue.toLowerCase()}.svg`} width={25} height={25} alt={selectedValue} />
+                  <div className='flex rounded-full items-center justify-center z-0'>
+                    <Image
+                      src={getChainIconUrl(getChainIdByChainKey(selectedValue as ChainKey))}
+                      width={25}
+                      height={25}
+                      alt={selectedValue}
+                      className='rounded-full'
+                    />
+                  </div>
                 )
               }
               renderValue={(items) => {
@@ -352,7 +370,17 @@ export default function TransferCard() {
                 <SelectItem
                   key={token.key}
                   value={token.value}
-                  startContent={<Image src={`/logo/${token.value}.svg`} width={25} height={25} alt={token.value} />}
+                  startContent={
+                    <div className='flex rounded-full items-center justify-center z-0'>
+                      <Image
+                        src={getChainIconUrl(token.chainId)}
+                        width={25}
+                        height={25}
+                        alt={token.value}
+                        className='rounded-full'
+                      />
+                    </div>
+                  }
                 >
                   <span className='text-black'>{token.key}</span>
                 </SelectItem>

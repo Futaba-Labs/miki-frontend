@@ -22,9 +22,16 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
-import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI, EXAMPLE_DEPLOYMENT } from '@/utils'
-import { convertToChainName, getChainIconUrl } from '@/utils/helper'
+import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI } from '@/utils'
 import { getFee } from '@/utils/axelar'
+import {
+  getChainIconUrl,
+  convertToChainName,
+  getChainKeys,
+  getChainIdByChainKey,
+  ChainKey,
+} from '@/utils/constants/chain'
+import { getDeploymentAddress } from '@/utils/constants/deployment'
 
 const theme = {
   background: '#f5f8fb',
@@ -37,6 +44,19 @@ const theme = {
   userBubbleColor: '#fff',
   userFontColor: '#4a4a4a',
 }
+
+const getChainOptions = () => {
+  const chains = getChainKeys()
+  return chains
+    .map((chain) => {
+      if (chain === ChainKey.ARBITRUM_SEPOLIA) return null
+      const chainId = getChainIdByChainKey(chain)
+      return { value: chainId, label: chain, trigger: '32' }
+    })
+    .filter((option) => option !== null)
+}
+
+console.log(getChainOptions())
 
 export default function ChatBotWindow() {
   const chatbotSteps = [
@@ -97,15 +117,7 @@ export default function ChatBotWindow() {
     },
     {
       id: 'chainNFT',
-      options: [
-        { value: '11155420', label: 'Optimism Sepolia', trigger: '32' },
-        { value: '84532', label: 'Base Sepolia', trigger: '32' },
-        { value: '5003', label: 'Mantle Sepolia', trigger: '32' },
-        { value: '534351', label: 'Scroll Sepolia', trigger: '32' },
-        { value: '43113', label: 'Avalanche Fuji', trigger: '32' },
-        { value: '97', label: 'BNB Testnet', trigger: '32' },
-        { value: '168587773', label: 'Blast Sepolia', trigger: '32' },
-      ],
+      options: getChainOptions(),
     },
     {
       id: '10',
@@ -205,6 +217,7 @@ export default function ChatBotWindow() {
     /* eslint-disable no-async-promise-executor */
     return new Promise<void>(async (resolve, reject) => {
       let data = ''
+      const deployment = getDeploymentAddress(chain)
       if (dapps === 'NFT') {
         const parsedAmount = parseEther(amount.toString())
         const encodedRecipient = encodeAbiParameters([{ type: 'address', name: 'recipient' }], [address])
@@ -216,7 +229,7 @@ export default function ChatBotWindow() {
           ],
           [_options.toHex() as `0x${string}`, '0x0'],
         )
-        const nft = EXAMPLE_DEPLOYMENT[chain.toString()].nft
+        const nft = deployment.nft
 
         let fee = BigInt(0)
         if (chain === 5003) {
@@ -236,8 +249,8 @@ export default function ChatBotWindow() {
           args: [chain, nft, encodedRecipient, fee, params],
         })
       } else {
-        const aave = EXAMPLE_DEPLOYMENT[chain.toString()].aave
-        const weth = EXAMPLE_DEPLOYMENT[chain.toString()].weth
+        const aave = deployment.aave
+        const weth = deployment.weth
 
         const encodedMsg = encodeAbiParameters([{ type: 'address', name: 'weth' }], [weth!])
 
@@ -326,6 +339,7 @@ export default function ChatBotWindow() {
 
     let functionName = ''
     let args = []
+    const deployment = getDeploymentAddress(chain)
     if (dapps === 'NFT') {
       const parsedAmount = parseEther(amount.toString())
       const encodedRecipient = encodeAbiParameters([{ type: 'address', name: 'recipient' }], [address])
@@ -337,7 +351,7 @@ export default function ChatBotWindow() {
         ],
         [_options.toHex() as `0x${string}`, '0x0'],
       )
-      const nft = EXAMPLE_DEPLOYMENT[chain.toString()].nft
+      const nft = deployment.nft
 
       const fee = await client.readContract({
         address: DEPLOYMENT.ethAdapter as `0x${string}`,
@@ -348,8 +362,8 @@ export default function ChatBotWindow() {
       functionName = 'crossChainContractCall'
       args = [chain, nft, encodedRecipient, fee, params]
     } else {
-      const aave = EXAMPLE_DEPLOYMENT[chain.toString()].aave
-      const weth = EXAMPLE_DEPLOYMENT[chain.toString()].weth
+      const aave = deployment.aave
+      const weth = deployment.weth
 
       const encodedMsg = encodeAbiParameters([{ type: 'address', name: 'weth' }], [weth!])
 

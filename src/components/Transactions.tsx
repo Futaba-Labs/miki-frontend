@@ -106,9 +106,8 @@ export default function Transactions() {
     const intervalId = setInterval(() => {
       refetch()
     }, 10000)
-
     return () => {
-      clearInterval(intervalId)
+      clearInterval(intervalId as unknown as number)
     }
   }, [])
 
