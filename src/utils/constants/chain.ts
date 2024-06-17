@@ -8,7 +8,9 @@ export enum ChainId {
   MANTLE_SEPOLIA = 5003,
   SCROLL_SEPOLIA = 534351,
   AVALANCHE_FUJI = 43113,
-  BLAST_SEPOLIA = 168587773
+  BLAST_SEPOLIA = 168587773,
+  POLYGON_CARDONA = 2442,
+  ASTAR_ZKYOTO = 6038361
 }
 
 export enum ChainKey {
@@ -19,7 +21,9 @@ export enum ChainKey {
   MANTLE_SEPOLIA = "Mantle Sepolia",
   SCROLL_SEPOLIA = "Scroll Sepolia",
   AVALANCHE_FUJI = "Avalanche Fuji",
-  BLAST_SEPOLIA = "Blast Sepolia"
+  BLAST_SEPOLIA = "Blast Sepolia",
+  POLYGON_CARDONA = "Polygon Cardona",
+  ASTAR_ZKYOTO = "Astar Zkyoto"
 }
 
 export const REGISTRY: Record<ChainKey, Chain> = {
@@ -63,6 +67,16 @@ export const REGISTRY: Record<ChainKey, Chain> = {
     explorer: 'https://testnet.blastscan.io',
     logo: '/logo/blast.png'
   },
+  [ChainKey.POLYGON_CARDONA]: {
+    id: ChainId.POLYGON_CARDONA,
+    explorer: 'https://cardona-zkevm.polygonscan.com',
+    logo: '/logo/polygon.svg'
+  },
+  [ChainKey.ASTAR_ZKYOTO]: {
+    id: ChainId.ASTAR_ZKYOTO,
+    explorer: 'https://astar-zkevm.explorer.startale.com',
+    logo: '/logo/astar.png'
+  }
 }
 
 export const getChainKey = (chainId: ChainId): ChainKey => {

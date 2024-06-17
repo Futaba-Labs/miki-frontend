@@ -49,6 +49,16 @@ export const EXAMPLE_DEPLOYMENT: Record<ChainKey, Partial<Record<string, `0x${st
     "aave": zeroAddress,
     "weth": zeroAddress
   },
+  [ChainKey.POLYGON_CARDONA]: {
+    "nft": "0x43b7C54E750c403565b848235D772A7A04eAB50E",
+    "aave": zeroAddress,
+    "weth": zeroAddress
+  },
+  [ChainKey.ASTAR_ZKYOTO]: {
+    "nft": "0xc6daDCc6bF602dE9DF7d410d15a1b0fB2cAE1BB7",
+    "aave": zeroAddress,
+    "weth": zeroAddress
+  }
 }
 
 export const getDeploymentAddress = (chainId: number) => {
