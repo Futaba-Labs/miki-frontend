@@ -58,6 +58,11 @@ export const EXAMPLE_DEPLOYMENT: Record<ChainKey, Partial<Record<string, `0x${st
     "nft": "0xc6daDCc6bF602dE9DF7d410d15a1b0fB2cAE1BB7",
     "aave": zeroAddress,
     "weth": zeroAddress
+  },
+  [ChainKey.ZKSYNC_SEPOLIA]: {
+    "nft": zeroAddress,
+    "aave": zeroAddress,
+    "weth": zeroAddress
   }
 }
 

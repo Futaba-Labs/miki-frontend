@@ -10,7 +10,8 @@ export enum ChainId {
   AVALANCHE_FUJI = 43113,
   BLAST_SEPOLIA = 168587773,
   POLYGON_CARDONA = 2442,
-  ASTAR_ZKYOTO = 6038361
+  ASTAR_ZKYOTO = 6038361,
+  ZKSYNC_SEPOLIA = 300
 }
 
 export enum ChainKey {
@@ -23,7 +24,8 @@ export enum ChainKey {
   AVALANCHE_FUJI = "Avalanche Fuji",
   BLAST_SEPOLIA = "Blast Sepolia",
   POLYGON_CARDONA = "Polygon Cardona",
-  ASTAR_ZKYOTO = "Astar Zkyoto"
+  ASTAR_ZKYOTO = "Astar Zkyoto",
+  ZKSYNC_SEPOLIA = "Zksync Sepolia"
 }
 
 export const REGISTRY: Record<ChainKey, Chain> = {
@@ -76,6 +78,11 @@ export const REGISTRY: Record<ChainKey, Chain> = {
     id: ChainId.ASTAR_ZKYOTO,
     explorer: 'https://astar-zkevm.explorer.startale.com',
     logo: '/logo/astar.png'
+  },
+  [ChainKey.ZKSYNC_SEPOLIA]: {
+    id: ChainId.ZKSYNC_SEPOLIA,
+    explorer: 'https://sepolia.explorer.zksync.io',
+    logo: '/logo/zksync.svg'
   }
 }
 
@@ -91,7 +98,7 @@ export const getChainKeys = (): ChainKey[] => {
 }
 
 export const getMagicTransferChainKeys = () => {
-  return [ChainKey.OPTIMISM_SEPOLIA, ChainKey.BASE_SEPOLIA, ChainKey.SCROLL_SEPOLIA, ChainKey.BLAST_SEPOLIA]
+  return [ChainKey.OPTIMISM_SEPOLIA, ChainKey.BASE_SEPOLIA, ChainKey.SCROLL_SEPOLIA, ChainKey.BLAST_SEPOLIA, ChainKey.ZKSYNC_SEPOLIA]
 }
 
 export const getChainIdByChainKey = (chainKey: ChainKey): ChainId => {
