@@ -117,7 +117,15 @@ export default function TransactionDetail({ params }: { params: { id: string } }
 
           <div className='flex flex-col pr-10 py-8 gap-2'>
             <div className='flex gap-2'>
-              <Image src={chainIcon} width={25} height={25} alt={transaction.dstChainId.toString()} />
+              <div className='flex rounded-full items-center justify-center'>
+                <Image
+                  src={chainIcon}
+                  width={25}
+                  height={25}
+                  alt={transaction.dstChainId.toString()}
+                  className='rounded-full'
+                />
+              </div>
               <p className='text-lg text-black'>{convertToChainName(parseInt(transaction.dstChainId.toString()))}</p>
             </div>
             <Link isExternal isBlock showAnchorIcon href={getExploerUrl(421614) + '/address/' + transaction.to}>

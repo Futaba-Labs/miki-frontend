@@ -6,7 +6,6 @@ import {
   Button,
   Select,
   SelectItem,
-  Link,
   useDisclosure,
   Modal,
   ModalContent,
@@ -17,18 +16,14 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { GelatoRelay, CallWithSyncFeeERC2771Request, TaskState } from '@gelatonetwork/relay-sdk'
-import { Options } from '@layerzerolabs/lz-v2-utilities'
 import { ethers } from 'ethers'
 import { toast } from 'react-toastify'
-import { createPublicClient, http, parseEther, encodeAbiParameters, encodeFunctionData } from 'viem'
-import { arbitrumSepolia } from 'viem/chains'
+import { parseEther, encodeFunctionData } from 'viem'
 import { useAccount } from 'wagmi'
 import { useSearchParams } from 'next/navigation'
-import { DEPLOYMENT, ETH_ADAPTER_ABI, ETH_TOKEN_POOL_ABI } from '@/utils'
+import { DEPLOYMENT, ETH_TOKEN_POOL_ABI } from '@/utils'
 import { roundedNumber } from '@/utils/helper'
 import { useDepositAmount } from '@/hooks'
-import { CHAIN_ID } from '@/utils/constants'
-import { getDeploymentAddress } from '@/utils/constants/deployment'
 import { getMagicTransferChainKeys, getChainIdByChainKey, getChainIconUrl, ChainKey } from '@/utils/constants/chain'
 import MikiCard from './MikiCard'
 
@@ -45,7 +40,7 @@ export default function TransferCard() {
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [selected, setSelected] = useState<any>(new Set(['Select Chain']))
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState('')
   const [recipient, setRecipient] = useState<`0x${string}`>('0x')
   const [chainId, setChainId] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -62,8 +57,6 @@ export default function TransferCard() {
     return value
   }, [selected])
 
-  console.log(`selected value: ${selectedValue}`)
-
   const { address } = useAccount()
   const balance = useDepositAmount()
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
@@ -73,15 +66,11 @@ export default function TransferCard() {
   const recipientParam = params.get('recipient')
   const chainParam = params.get('chainId')
 
-  const client = createPublicClient({
-    chain: arbitrumSepolia,
-    transport: http(),
-  })
   const relay = new GelatoRelay()
 
   const handleSetAmount = useCallback(
     (value: string) => {
-      setAmount(parseFloat(value))
+      setAmount(value)
     },
     [setAmount],
   )
@@ -93,12 +82,12 @@ export default function TransferCard() {
 
   const hanndleMax = async (value: number) => {
     if (value) {
-      setAmount(value - 0.001)
+      setAmount((value - 0.001).toString())
     }
   }
 
   const transfer = () => {
-    if (amount <= 0) {
+    if (amount === '0') {
       toast.error('Amount must be greater than 0', { position: 'bottom-right' })
       return
     }
@@ -113,13 +102,8 @@ export default function TransferCard() {
       return
     }
 
-    if (chainId !== CHAIN_ID) {
-      toast.error('Please connect to Arbitrum Sepolia', { position: 'bottom-right' })
-      return
-    }
-
     if (balance) {
-      if (parseEther(balance.toString()) < parseEther((amount - 0.001).toString())) {
+      if (parseEther(balance.toString()) < parseEther((parseFloat(amount) - 0.001).toString())) {
         toast.error('Insufficient balance', { position: 'bottom-right' })
         return
       }
@@ -132,30 +116,12 @@ export default function TransferCard() {
 
     /* eslint-disable no-async-promise-executor */
     return new Promise<void>(async (resolve, reject) => {
-      const deployment = getDeploymentAddress(chainId)
       const parsedAmount = parseEther(amount.toString())
-      const encodedRecipient = encodeAbiParameters([{ type: 'address', name: 'recipient' }], [recipient])
-      const _options = Options.newOptions().addExecutorLzReceiveOption(1000000, 0)
-      const params = encodeAbiParameters(
-        [
-          { type: 'bytes', name: 'options' },
-          { type: 'bytes', name: 'sgParams' },
-        ],
-        [_options.toHex() as `0x${string}`, '0x0'],
-      )
-      const nft = deployment.nft
-
-      const fee = await client.readContract({
-        address: DEPLOYMENT.ethAdapter as `0x${string}`,
-        abi: ETH_ADAPTER_ABI,
-        functionName: 'estimateFee',
-        args: [address, chainId, nft, nft, encodedRecipient, parsedAmount, params],
-      })
 
       const data = encodeFunctionData({
         abi: ETH_TOKEN_POOL_ABI,
-        functionName: 'crossChainContractCallRelay',
-        args: [chainId, nft, encodedRecipient, fee, params],
+        functionName: 'crossChainTransferAssetRelay',
+        args: [chainId, recipient, 0, parsedAmount, ''],
       })
 
       const request: CallWithSyncFeeERC2771Request = {
@@ -186,15 +152,6 @@ export default function TransferCard() {
           toast.success(
             <>
               <p>Transfer successful!</p>
-              {'View on'}
-              <Link
-                isExternal
-                isBlock
-                showAnchorIcon
-                href={`https://testnet.layerzeroscan.com/tx/${status.transactionHash}`}
-              >
-                LayerZero scan
-              </Link>
             </>,
             { position: 'bottom-right' },
           )
@@ -238,9 +195,8 @@ export default function TransferCard() {
 
   useEffect(() => {
     if (amountParam) {
-      setAmount(parseFloat(amountParam))
+      setAmount(amountParam)
     }
-    console.log('recipientParam', recipientParam)
     if (recipientParam) {
       setRecipient(recipientParam as `0x${string}`)
     } else {
@@ -250,7 +206,6 @@ export default function TransferCard() {
     }
     if (chainParam) {
       const chain = chains.find((chain) => chain.chainId === parseInt(chainParam))
-      console.log('chain', chain)
       if (chain) {
         setSelected(new Set([chain.key]))
       }
@@ -414,12 +369,14 @@ export default function TransferCard() {
               <ModalHeader className='flex flex-col gap-1 text-black'>Transfer Link</ModalHeader>
               <ModalBody>
                 <p className='text-black pb-2'>You can share this link with others to request token transfer.</p>
-                <span className='overflow-auto text-black'>{createTransferLink(amount, recipient, chainId)}</span>
+                <span className='overflow-auto text-black'>
+                  {createTransferLink(parseFloat(amount), recipient, chainId)}
+                </span>
               </ModalBody>
               <ModalFooter>
                 <Button
                   radius='sm'
-                  onClick={() => handleCopy(createTransferLink(amount, recipient, chainId))}
+                  onClick={() => handleCopy(createTransferLink(parseFloat(amount), recipient, chainId))}
                   className='bg-button drop-shadow-button hover:bg-green-100'
                 >
                   <span className='text-green font-bold text-lg'>{isCopied ? 'Copied!' : 'Copy'}</span>

@@ -5,9 +5,10 @@ import { useAccount, useBalance, useWriteContract } from 'wagmi'
 import { formatEther, parseEther } from 'viem'
 import { toast } from 'react-toastify'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
-import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
+// import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
 import { CHAIN_ID } from '@/utils/constants'
 import { roundedNumber } from '@/utils/helper'
+import { L2_ASSET_MANAGER_ABI, DEPLOYMENT } from '@/utils'
 import MikiCard from './MikiCard'
 
 const items = [
@@ -16,7 +17,7 @@ const items = [
 ]
 
 export default function AccountOperations() {
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState('')
 
   const { address, chainId } = useAccount()
   const { data: balance, refetch: refetchBalance } = useBalance({
@@ -32,14 +33,14 @@ export default function AccountOperations() {
     return value
   }, [selected])
 
-  const handleDeposit = () => {
+  const handleDeposit = async () => {
     if (chainId !== CHAIN_ID) {
       toast.error('Please connect to Arbitrum Sepolia', { position: 'bottom-right' })
       return
     }
 
     if (balance) {
-      if (balance.value < parseEther((amount - 0.001).toString())) {
+      if (balance.value < parseEther((parseFloat(amount) - 0.001).toString())) {
         toast.error('Insufficient balance', { position: 'bottom-right' })
         return
       }
@@ -47,6 +48,30 @@ export default function AccountOperations() {
       toast.error('Unable to fetch balance', { position: 'bottom-right' })
       return
     }
+
+    // const walletClient = createWalletClient({
+    //   chain: arbitrumSepolia,
+    //   transport: custom(window.ethereum!),
+    // })
+
+    // const [account] = await walletClient.getAddresses()
+
+    // const request = await walletClient.prepareTransactionRequest({
+    //   account,
+    //   to: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
+    //   value: parseEther(amount.toString()),
+    // })
+
+    // console.log(request)
+
+    // const signature = await walletClient.signMessage({
+    //   account,
+    //   message: {
+    //     raw: ,
+    //   },
+    // })
+
+    // console.log(signature)
 
     writeContract({
       abi: L2_ASSET_MANAGER_ABI,
@@ -63,14 +88,14 @@ export default function AccountOperations() {
 
   const handleSetAmount = useCallback(
     (value: string) => {
-      setAmount(parseFloat(value))
+      setAmount(value)
     },
     [setAmount],
   )
 
   const hanndleMax = async (value: bigint | undefined) => {
     if (value) {
-      setAmount(parseFloat(formatEther(value)) - 0.001)
+      setAmount((parseFloat(formatEther(value)) - 0.001).toString())
     }
   }
 
@@ -227,7 +252,7 @@ export default function AccountOperations() {
                         '!cursor-text',
                       ],
                     }}
-                    onChange={(e) => setAmount(parseFloat(e.target.value))}
+                    onChange={(e) => setAmount(e.target.value)}
                   />
                 </div>
                 <div style={{ marginTop: '64px' }}></div>

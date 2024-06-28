@@ -8,7 +8,10 @@ export enum ChainId {
   MANTLE_SEPOLIA = 5003,
   SCROLL_SEPOLIA = 534351,
   AVALANCHE_FUJI = 43113,
-  BLAST_SEPOLIA = 168587773
+  BLAST_SEPOLIA = 168587773,
+  POLYGON_CARDONA = 2442,
+  ASTAR_ZKYOTO = 6038361,
+  ZKSYNC_SEPOLIA = 300
 }
 
 export enum ChainKey {
@@ -19,7 +22,10 @@ export enum ChainKey {
   MANTLE_SEPOLIA = "Mantle Sepolia",
   SCROLL_SEPOLIA = "Scroll Sepolia",
   AVALANCHE_FUJI = "Avalanche Fuji",
-  BLAST_SEPOLIA = "Blast Sepolia"
+  BLAST_SEPOLIA = "Blast Sepolia",
+  POLYGON_CARDONA = "Polygon Cardona",
+  ASTAR_ZKYOTO = "Astar Zkyoto",
+  ZKSYNC_SEPOLIA = "Zksync Sepolia"
 }
 
 export const REGISTRY: Record<ChainKey, Chain> = {
@@ -63,6 +69,21 @@ export const REGISTRY: Record<ChainKey, Chain> = {
     explorer: 'https://testnet.blastscan.io',
     logo: '/logo/blast.png'
   },
+  [ChainKey.POLYGON_CARDONA]: {
+    id: ChainId.POLYGON_CARDONA,
+    explorer: 'https://cardona-zkevm.polygonscan.com',
+    logo: '/logo/polygon.svg'
+  },
+  [ChainKey.ASTAR_ZKYOTO]: {
+    id: ChainId.ASTAR_ZKYOTO,
+    explorer: 'https://astar-zkevm.explorer.startale.com',
+    logo: '/logo/astar.png'
+  },
+  [ChainKey.ZKSYNC_SEPOLIA]: {
+    id: ChainId.ZKSYNC_SEPOLIA,
+    explorer: 'https://sepolia.explorer.zksync.io',
+    logo: '/logo/zksync.svg'
+  }
 }
 
 export const getChainKey = (chainId: ChainId): ChainKey => {
@@ -77,7 +98,11 @@ export const getChainKeys = (): ChainKey[] => {
 }
 
 export const getMagicTransferChainKeys = () => {
-  return [ChainKey.OPTIMISM_SEPOLIA, ChainKey.BASE_SEPOLIA, ChainKey.SCROLL_SEPOLIA, ChainKey.BLAST_SEPOLIA]
+  return [ChainKey.OPTIMISM_SEPOLIA, ChainKey.BASE_SEPOLIA, ChainKey.SCROLL_SEPOLIA, ChainKey.BLAST_SEPOLIA, ChainKey.ZKSYNC_SEPOLIA]
+}
+
+export const getNftChainKeys = () => {
+  return [ChainKey.OPTIMISM_SEPOLIA, ChainKey.BASE_SEPOLIA, ChainKey.SCROLL_SEPOLIA, ChainKey.BLAST_SEPOLIA, ChainKey.BNB_TESTNET, ChainKey.AVALANCHE_FUJI, ChainKey.MANTLE_SEPOLIA]
 }
 
 export const getChainIdByChainKey = (chainKey: ChainKey): ChainId => {
@@ -90,7 +115,6 @@ export const getChainIdByChainKey = (chainKey: ChainKey): ChainId => {
 
 export const getChainIconUrl = (chainId: number) => {
   const chainKey = getChainKey(chainId)
-  console.log(REGISTRY[chainKey])
   return REGISTRY[chainKey].logo
 }
 
