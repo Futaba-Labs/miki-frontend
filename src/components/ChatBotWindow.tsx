@@ -27,7 +27,7 @@ import { getFee } from '@/utils/axelar'
 import {
   getChainIconUrl,
   convertToChainName,
-  getChainKeys,
+  getNftChainKeys,
   getChainIdByChainKey,
   ChainKey,
 } from '@/utils/constants/chain'
@@ -46,7 +46,7 @@ const theme = {
 }
 
 const getChainOptions = () => {
-  const chains = getChainKeys()
+  const chains = getNftChainKeys()
   return chains
     .map((chain) => {
       if (chain === ChainKey.ARBITRUM_SEPOLIA) return null
@@ -55,8 +55,6 @@ const getChainOptions = () => {
     })
     .filter((option) => option !== null)
 }
-
-console.log(getChainOptions())
 
 export default function ChatBotWindow() {
   const chatbotSteps = [
@@ -275,7 +273,6 @@ export default function ChatBotWindow() {
       let taskId = ''
       try {
         const relayResponse = await relay.callWithSyncFeeERC2771(request, provider, undefined)
-        console.log(relayResponse)
         taskId = relayResponse.taskId
       } catch (error) {
         onClose()

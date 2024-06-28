@@ -94,7 +94,6 @@ export default function Transactions() {
     }
 
     if (searchData) {
-      console.log('searchData', searchData)
       if (searchData.crossChainExecs.items.length > 0) {
         router.push(`/explorer/${searchData.crossChainExecs.items[0].id}`)
       }

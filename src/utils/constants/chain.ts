@@ -101,6 +101,10 @@ export const getMagicTransferChainKeys = () => {
   return [ChainKey.OPTIMISM_SEPOLIA, ChainKey.BASE_SEPOLIA, ChainKey.SCROLL_SEPOLIA, ChainKey.BLAST_SEPOLIA, ChainKey.ZKSYNC_SEPOLIA]
 }
 
+export const getNftChainKeys = () => {
+  return [ChainKey.OPTIMISM_SEPOLIA, ChainKey.BASE_SEPOLIA, ChainKey.SCROLL_SEPOLIA, ChainKey.BLAST_SEPOLIA, ChainKey.BNB_TESTNET, ChainKey.AVALANCHE_FUJI, ChainKey.MANTLE_SEPOLIA]
+}
+
 export const getChainIdByChainKey = (chainKey: ChainKey): ChainId => {
   const formattedKey = chainKey.replace(/\s+/g, '_').toUpperCase();
   const ck = formattedKey as unknown as keyof typeof ChainId;
@@ -111,7 +115,6 @@ export const getChainIdByChainKey = (chainKey: ChainKey): ChainId => {
 
 export const getChainIconUrl = (chainId: number) => {
   const chainKey = getChainKey(chainId)
-  console.log(REGISTRY[chainKey])
   return REGISTRY[chainKey].logo
 }
 

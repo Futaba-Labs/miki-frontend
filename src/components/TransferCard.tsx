@@ -57,8 +57,6 @@ export default function TransferCard() {
     return value
   }, [selected])
 
-  console.log(`selected value: ${selectedValue}`)
-
   const { address } = useAccount()
   const balance = useDepositAmount()
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
@@ -199,7 +197,6 @@ export default function TransferCard() {
     if (amountParam) {
       setAmount(amountParam)
     }
-    console.log('recipientParam', recipientParam)
     if (recipientParam) {
       setRecipient(recipientParam as `0x${string}`)
     } else {
@@ -209,7 +206,6 @@ export default function TransferCard() {
     }
     if (chainParam) {
       const chain = chains.find((chain) => chain.chainId === parseInt(chainParam))
-      console.log('chain', chain)
       if (chain) {
         setSelected(new Set([chain.key]))
       }
