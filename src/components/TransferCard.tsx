@@ -215,7 +215,7 @@ export default function TransferCard() {
   return (
     <>
       <MikiCard width={300} height={300}>
-        <div className='flex justify-between items-center px-8 py-8'>
+        <div className='flex flex-col sm:flex-row justify-between sm:items-center px-8 py-8 gap-4 sm:gap-0'>
           <span className='font-bold text-black text-xl'>Transfer</span>
 
           <div className='flex flex-col items-end w-full gap-4'>
@@ -227,7 +227,7 @@ export default function TransferCard() {
               min={0}
               step='any'
               radius='sm'
-              className='w-128'
+              className='w-full sm:w-128'
               classNames={{
                 label: 'text-black text-sm',
                 input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
@@ -270,7 +270,7 @@ export default function TransferCard() {
               labelPlacement='outside'
               placeholder='0x...'
               radius='sm'
-              className='w-128'
+              className='w-full sm:w-128'
               classNames={{
                 label: 'text-black text-sm',
                 input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
@@ -292,7 +292,7 @@ export default function TransferCard() {
             />
             <Select
               items={chains}
-              className='text-green w-128'
+              className='text-green w-full sm:w-128'
               radius='sm'
               onSelectionChange={setSelected}
               labelPlacement='outside'
@@ -324,7 +324,8 @@ export default function TransferCard() {
               {chains.map((token) => (
                 <SelectItem
                   key={token.key}
-                  value={token.value}
+                  textValue={token.value}
+                  aria-label={token.value}
                   startContent={
                     <div className='flex rounded-full items-center justify-center z-0'>
                       <Image
@@ -341,20 +342,20 @@ export default function TransferCard() {
                 </SelectItem>
               ))}
             </Select>
-            <div className='flex justify-center gap-4 w-128'>
+            <div className='flex justify-between sm:justify-center gap-4 w-full sm:w-128'>
               <Button
                 isLoading={loading}
                 radius='sm'
                 onClick={() => transfer()}
                 startContent={!loading ? <Image src={'/icon/send.svg'} width={18} height={18} alt='send' /> : null}
-                className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+                className='bg-button drop-shadow-button hover:bg-green-100 focus:ring w-full sm:w-auto'
               >
                 <span className='text-green font-bold text-lg'>{loading ? 'Sending...' : 'Send'}</span>
               </Button>
               <Button
                 radius='sm'
                 onClick={onOpen}
-                className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+                className='bg-button drop-shadow-button hover:bg-green-100 focus:ring w-full sm:w-auto'
               >
                 <span className='text-green font-bold text-lg'>Create Link</span>
               </Button>

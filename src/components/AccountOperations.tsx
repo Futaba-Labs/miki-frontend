@@ -131,7 +131,7 @@ export default function AccountOperations() {
           }}
         >
           {items.map((token) => (
-            <SelectItem key={token.key} value={token.value}>
+            <SelectItem key={token.key} textValue={token.value} aria-label={token.value}>
               <span className='text-black'>{token.value}</span>
             </SelectItem>
           ))}
