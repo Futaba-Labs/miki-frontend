@@ -5,7 +5,6 @@ import { useAccount, useBalance, useWriteContract } from 'wagmi'
 import { formatEther, parseEther } from 'viem'
 import { toast } from 'react-toastify'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
-// import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
 import { CHAIN_ID } from '@/utils/constants'
 import { roundedNumber } from '@/utils/helper'
 import { L2_ASSET_MANAGER_ABI, DEPLOYMENT } from '@/utils'
@@ -48,30 +47,6 @@ export default function AccountOperations() {
       toast.error('Unable to fetch balance', { position: 'bottom-right' })
       return
     }
-
-    // const walletClient = createWalletClient({
-    //   chain: arbitrumSepolia,
-    //   transport: custom(window.ethereum!),
-    // })
-
-    // const [account] = await walletClient.getAddresses()
-
-    // const request = await walletClient.prepareTransactionRequest({
-    //   account,
-    //   to: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
-    //   value: parseEther(amount.toString()),
-    // })
-
-    // console.log(request)
-
-    // const signature = await walletClient.signMessage({
-    //   account,
-    //   message: {
-    //     raw: ,
-    //   },
-    // })
-
-    // console.log(signature)
 
     writeContract({
       abi: L2_ASSET_MANAGER_ABI,

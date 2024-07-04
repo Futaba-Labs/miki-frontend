@@ -16,7 +16,7 @@ export default function Home() {
       <div className='col-start-7 col-end-10'>
         <MikiCard width={300} height={400}>
           <div className='flex flex-col'>
-            <div className='flex justify-between items-center px-8 py-10'>
+            <div className='flex flex-col sm:flex-row justify-between sm:items-center px-8 py-10 gap-4 sm:gap-0'>
               <span className='font-bold text-black text-xl'>Explored Chains</span>
               <div className='flex items-baseline'>
                 <p className='font-bold text-black text-7xl pr-2'>5</p>

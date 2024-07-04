@@ -51,6 +51,22 @@ export default function DepositCard({ width, height }: DepositCardProps) {
     }
   }, [data])
 
+  useEffect(() => {
+    const updateDecimalPlaces = () => {
+      if (window.innerWidth < 640) {
+        setBalance(roundedNumber(balance, 2))
+      } else if (window.innerWidth < 1024) {
+        setBalance(roundedNumber(balance, 4))
+      } else {
+        setBalance(roundedNumber(balance, 6))
+      }
+    }
+
+    updateDecimalPlaces()
+    window.addEventListener('resize', updateDecimalPlaces)
+    return () => window.removeEventListener('resize', updateDecimalPlaces)
+  }, [balance])
+
   return (
     <div>
       <div className='flex justify-end drop-shadow-customp pb-8'>
@@ -94,7 +110,7 @@ export default function DepositCard({ width, height }: DepositCardProps) {
         </Select>
       </div>
       <MikiCard width={width} height={height}>
-        <div className='flex justify-between items-center px-8 py-10'>
+        <div className='flex flex-col sm:flex-row justify-between sm:items-center px-8 py-10 gap-4 sm:gap-0'>
           <span className='font-bold text-black text-xl'>Your Deposits</span>
           {selectedValue === 'ETH' && (
             <div className='flex items-baseline'>
