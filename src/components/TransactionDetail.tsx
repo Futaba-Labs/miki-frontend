@@ -84,10 +84,10 @@ export default function TransactionDetail({ params }: { params: { id: string } }
   const chainIcon = getChainIconUrl(dstChainId)
 
   return (
-    <div className='flex flex-col w-4/5 mx-auto gap-10 pt-12'>
+    <div className='flex flex-col w-full sm:w-4/5 mx-auto gap-10 pt-12'>
       <MikiCard width={100} height={100}>
-        <div className='flex justify-between items-center'>
-          <div className='flex flex-col pl-10 py-8 gap-2'>
+        <div className='flex flex-col sm:flex-row justify-between items-center gap-4'>
+          <div className='flex flex-col items-center sm:items-start pl-0 sm:pl-10 pt-8 sm:py-8 gap-2'>
             <div className='flex gap-2'>
               <Image src={'/logo/arbitrum.svg'} width={25} height={25} alt={'arbitrum'} />
               <p className='text-lg text-black'>Arbiturm Sepolia</p>
@@ -115,7 +115,7 @@ export default function TransactionDetail({ params }: { params: { id: string } }
             </div>
           ) : null}
 
-          <div className='flex flex-col pr-10 py-8 gap-2'>
+          <div className='flex flex-col pr-0 sm:pr-10 pb-8 sm:py-8 gap-2 items-center sm:items-start'>
             <div className='flex gap-2'>
               <div className='flex rounded-full items-center justify-center'>
                 <Image
@@ -135,7 +135,7 @@ export default function TransactionDetail({ params }: { params: { id: string } }
         </div>
       </MikiCard>
 
-      <div className='flex gap-10 justify-between'>
+      <div className='flex flex-col sm:flex-row gap-10 justify-between'>
         <div className='w-full'>
           <MikiCard width={100} height={100}>
             <div className='p-8'>
@@ -166,7 +166,7 @@ export default function TransactionDetail({ params }: { params: { id: string } }
           </MikiCard>
         </div>
 
-        <div className='w-full'>
+        <div className='w-full mb-10 sm:mb-0'>
           <MikiCard width={100} height={100}>
             <div className='p-8'>
               <p className='text-xl font-bold text-black pb-6'>Destination Transaction</p>

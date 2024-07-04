@@ -42,23 +42,23 @@ export default function TransactionCard({ transaction }: Props) {
       className={'shadow-inner bg-white rounded-[16px] hover:bg-gray-100 cursor-pointer'}
       onClick={() => router.push(`/explorer/${transaction.id}`)}
     >
-      <td className='py-5 pl-5 rounded-l-[16px]'>
+      <td className='py-5 px-5 rounded-l-[16px]'>
         <Chip color={color}>
           <p className='text-white font-bold text-md'>{transaction.status}</p>
         </Chip>
       </td>
 
-      <td>
+      <td className='pr-5'>
         <Link isExternal isBlock showAnchorIcon href={getExploerUrl(421614) + '/tx/' + transaction.reqTransaction.hash}>
           {omitText(transaction.reqTransaction.hash, 8, 8)}
         </Link>
       </td>
-      <td>
+      <td className='pr-5'>
         <Link isExternal isBlock showAnchorIcon href={getExploerUrl(421614) + '/address/' + transaction.sender}>
           {omitText(transaction.sender, 8, 8)}
         </Link>
       </td>
-      <td>
+      <td className='pr-5'>
         {transaction.resTransaction && (
           <div className='flex'>
             <div className='flex rounded-full items-center justify-center'>
@@ -67,7 +67,7 @@ export default function TransactionCard({ transaction }: Props) {
                 width={20}
                 height={20}
                 alt={transaction.dstChainId.toString()}
-                className='rounded-full'
+                className='rounded-full min-w-[20px] min-h-[20px]'
               />
             </div>
 
@@ -85,10 +85,12 @@ export default function TransactionCard({ transaction }: Props) {
         )}
       </td>
       <td>
-        <p className='text-black'>{getProtocol(transaction.to)}</p>
+        <p className='text-black whitespace-nowrap pr-5'>{getProtocol(transaction.to)}</p>
       </td>
-      <td className='rounded-r-[16px]'>
-        <p className='text-black'>{calculateTimeDifference(new Date(transaction.timestamp * 1000))}</p>
+      <td className='rounded-r-[16px] pr-5'>
+        <p className='text-black whitespace-nowrap'>
+          {calculateTimeDifference(new Date(transaction.timestamp * 1000))}
+        </p>
       </td>
     </tr>
   )

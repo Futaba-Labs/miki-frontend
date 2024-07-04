@@ -4,6 +4,7 @@ import { gql, useQuery } from '@apollo/client'
 import { Input, Button, Spinner, Pagination } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { CrossChainTransaction } from '@/types'
 import TransactionCard from './TransactionCard'
 
@@ -128,14 +129,14 @@ export default function Transactions() {
 
   return (
     <div className='w-full'>
-      <div className='flex items-end justify-center gap-2 w-full py-10'>
+      <div className='flex items-end justify-between sm:justify-center gap-2 w-full py-10'>
         <Input
           type='text'
           label='Search by Transaction Hash'
           labelPlacement='outside'
           placeholder='0x...'
           radius='sm'
-          className='w-2/5'
+          className='w-full sm:w-2/5'
           classNames={{
             label: 'text-black text-sm',
             input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
@@ -154,30 +155,47 @@ export default function Transactions() {
           onChange={(e) => setSearchParam(e.target.value)}
         />
         <div style={{ marginTop: '64px' }}></div>
-        <Button
-          isLoading={searchLoading}
-          radius='sm'
-          onClick={() => handleSearch()}
-          className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
-        >
-          <span className='text-green font-bold text-lg'>{searchLoading ? 'Searching...' : 'Search'}</span>
-        </Button>
+        {window.innerWidth < 640 ? (
+          <Button
+            isLoading={searchLoading}
+            radius='sm'
+            onClick={() => handleSearch()}
+            isIconOnly
+            className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+          >
+            <Image src={'/icon/search.svg'} width={18} height={18} alt='search' />
+          </Button>
+        ) : (
+          <Button
+            isLoading={searchLoading}
+            radius='sm'
+            onClick={() => handleSearch()}
+            startContent={
+              !searchLoading ? <Image src={'/icon/search.svg'} width={18} height={18} alt='search' /> : null
+            }
+            className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+          >
+            <span className='text-green font-bold text-lg'>{searchLoading ? 'Searching...' : 'Search'}</span>
+          </Button>
+        )}
       </div>
 
-      <div className='px-10 w-full'>
-        <table className='w-full border-spacing-y-4 border-separate'>
-          <tr className='text-left'>
-            <th className='font-bold text-black text-xl pl-5'>Status</th>
-            <th className='font-bold text-black text-xl'>Source Tx Hash</th>
-            <th className='font-bold text-black text-xl'>From</th>
-            <th className='font-bold text-black text-xl'>Destination Tx Hash</th>
-            <th className='font-bold text-black text-xl'>Protocol</th>
-            <th className='font-bold text-black text-xl'>Created</th>
-          </tr>
-          {transactions.map((transaction: CrossChainTransaction) => {
-            return <TransactionCard key={transaction.id} transaction={transaction} />
-          })}
-        </table>
+      <div className='px-0 sm:px-10 w-full'>
+        <div className='overflow-scroll sm:overflow-auto mb-4'>
+          <table className='w-full border-spacing-y-4 border-separate'>
+            <tr className='text-left'>
+              <th className='font-bold text-black text-xl pl-5'>Status</th>
+              <th className='font-bold text-black text-xl'>Source Tx</th>
+              <th className='font-bold text-black text-xl'>From</th>
+              <th className='font-bold text-black text-xl'>Destination Tx</th>
+              <th className='font-bold text-black text-xl'>Protocol</th>
+              <th className='font-bold text-black text-xl'>Created</th>
+            </tr>
+            {transactions.map((transaction: CrossChainTransaction) => {
+              return <TransactionCard key={transaction.id} transaction={transaction} />
+            })}
+          </table>
+        </div>
         <div className='flex justify-center'>
           <Pagination
             showControls

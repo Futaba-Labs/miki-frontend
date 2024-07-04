@@ -18,11 +18,13 @@ function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='en' className='light'>
       <body>
-        <Providers>
-          <Header />
-          {children}
-          <ToastContainer />
-        </Providers>
+        <div className='bg-image'>
+          <Providers>
+            <Header />
+            {children}
+            <ToastContainer />
+          </Providers>
+        </div>
       </body>
     </html>
   )

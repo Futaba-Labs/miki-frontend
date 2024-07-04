@@ -18,13 +18,11 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  font-family: 'Helvetica Neue';
   background-image: url('../../public/background.png');
   background-size: cover;
-  background-repeat: no-repeat;
-  font-family: 'Helvetica Neue';
-  height: 100vh;
   background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 input[type='number']::-webkit-outer-spin-button,

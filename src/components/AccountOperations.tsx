@@ -5,7 +5,6 @@ import { useAccount, useBalance, useWriteContract } from 'wagmi'
 import { formatEther, parseEther } from 'viem'
 import { toast } from 'react-toastify'
 import { useAddRecentTransaction } from '@rainbow-me/rainbowkit'
-// import { DEPLOYMENT, L2_ASSET_MANAGER_ABI } from '@/utils'
 import { CHAIN_ID } from '@/utils/constants'
 import { roundedNumber } from '@/utils/helper'
 import { L2_ASSET_MANAGER_ABI, DEPLOYMENT } from '@/utils'
@@ -48,30 +47,6 @@ export default function AccountOperations() {
       toast.error('Unable to fetch balance', { position: 'bottom-right' })
       return
     }
-
-    // const walletClient = createWalletClient({
-    //   chain: arbitrumSepolia,
-    //   transport: custom(window.ethereum!),
-    // })
-
-    // const [account] = await walletClient.getAddresses()
-
-    // const request = await walletClient.prepareTransactionRequest({
-    //   account,
-    //   to: '0x70997970c51812dc3a010c7d01b50e0d17dc79c8',
-    //   value: parseEther(amount.toString()),
-    // })
-
-    // console.log(request)
-
-    // const signature = await walletClient.signMessage({
-    //   account,
-    //   message: {
-    //     raw: ,
-    //   },
-    // })
-
-    // console.log(signature)
 
     writeContract({
       abi: L2_ASSET_MANAGER_ABI,
@@ -156,20 +131,20 @@ export default function AccountOperations() {
           }}
         >
           {items.map((token) => (
-            <SelectItem key={token.key} value={token.value}>
+            <SelectItem key={token.key} textValue={token.value} aria-label={token.value}>
               <span className='text-black'>{token.value}</span>
             </SelectItem>
           ))}
         </Select>
       </div>
       <MikiCard width={300} height={300}>
-        <div className='flex justify-between items-center px-8 py-10'>
+        <div className='flex flex-col sm:flex-row justify-between sm:items-center px-8 py-10 gap-4 sm:gap-0'>
           <span className='font-bold text-black text-xl'>
             {selectedValue === 'Deposit' ? 'Add Funds' : 'Withdraw Funds'}
           </span>
           <div className=''>
             {selectedValue === 'Deposit' ? (
-              <div className='flex items-end gap-2 w-full'>
+              <div className='flex flex-col sm:flex-row items-end gap-2 w-full'>
                 <div>
                   <Input
                     type='number'
@@ -179,7 +154,7 @@ export default function AccountOperations() {
                     radius='sm'
                     min={0}
                     step='any'
-                    className='w-80'
+                    className='w-full sm:w-80'
                     classNames={{
                       label: 'text-black text-sm',
                       input: ['text-black', 'placeholder:text-default-700/50 dark:placeholder:text-white/60'],
@@ -199,7 +174,7 @@ export default function AccountOperations() {
                     onValueChange={handleSetAmount}
                     value={amount.toString()}
                     endContent={
-                      <div className='flex gap-1  '>
+                      <div className='flex gap-1'>
                         <div className='flex gap-1'>
                           <span className='text-black text-sm'>Balance:</span>
                           <span className='text-black text-sm'>{convertToEther(balance?.value)}</span>
@@ -216,12 +191,12 @@ export default function AccountOperations() {
                     }
                   />
                 </div>
-                <div style={{ marginTop: '64px' }}></div>
+                <div className='mt-4 sm:mt-16'></div>
                 <Button
                   isLoading={isPending}
                   radius='sm'
                   onClick={() => handleDeposit()}
-                  className='bg-button drop-shadow-button hover:bg-green-100 focus:ring'
+                  className='bg-button drop-shadow-button hover:bg-green-100 focus:ring w-full sm:w-auto'
                 >
                   <span className='text-green font-bold text-lg'>{isPending ? 'Depositing...' : 'Deposit'}</span>
                 </Button>

@@ -1,18 +1,40 @@
 'use client'
 
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link } from '@nextui-org/react'
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenuToggle,
+  Link,
+  NavbarMenu,
+  NavbarMenuItem,
+} from '@nextui-org/react'
 import Image from 'next/image'
 import NextLink from 'next/link'
+import { useState } from 'react'
 import { CustomConnectButton } from '.'
 
 export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const menuItems = [
+    { name: 'Deposit', href: '/deposit' },
+    { name: 'Magic Transfer', href: '/transfer' },
+    { name: 'Smart Dapps', href: '/dapps' },
+    { name: 'Explorer', href: '/explorer' },
+  ]
+
   return (
-    <Navbar height={80} className='bg-white' maxWidth='full'>
+    <Navbar className='bg-white px-0 sm:px-6' maxWidth='full' isMenuOpen={isMenuOpen} onMenuOpenChange={setIsMenuOpen}>
       <NavbarBrand className=''>
         <Link href='/' as={NextLink}>
           <Image height={56} width={115} src={'/logo/miki.png'} alt='miki_logo' />
         </Link>
       </NavbarBrand>
+      <NavbarContent className='sm:hidden' justify='start'>
+        <NavbarMenuToggle aria-label={isMenuOpen ? 'Close menu' : 'Open menu'} />
+      </NavbarContent>
       <NavbarContent className='hidden sm:flex gap-x-11' justify='center'>
         <NavbarItem isActive>
           <Link href='/deposit' as={NextLink} className='text-black font-bold'>
@@ -40,6 +62,16 @@ export default function Header() {
           <CustomConnectButton />
         </NavbarItem>
       </NavbarContent>
+
+      <NavbarMenu>
+        {menuItems.map((item, index) => (
+          <NavbarMenuItem key={`${item.name}-${index}`}>
+            <Link as={NextLink} className='text-black font-bold' href={item.href} onPress={() => setIsMenuOpen(false)}>
+              {item.name}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
     </Navbar>
   )
 }

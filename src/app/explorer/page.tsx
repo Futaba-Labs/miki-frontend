@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 
 export default function Explorer() {
   return (
-    <>
+    <div className='px-6 sm:px-0 h-[calc(100vh-64px)]'>
       <WithApollo>
         <Transactions />
       </WithApollo>
-    </>
+    </div>
   )
 }
