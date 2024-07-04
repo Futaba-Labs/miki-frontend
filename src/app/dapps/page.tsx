@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Dapps() {
   return (
-    <div className='flex justify-center items-center h-[calc(100vh-80px)] px-6 sm:px-0'>
+    <div className='flex justify-center items-center h-[calc(100vh-64px)] px-6 sm:px-0'>
       <ChatBotWindow />
     </div>
   )

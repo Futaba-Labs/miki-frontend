@@ -180,20 +180,22 @@ export default function Transactions() {
         )}
       </div>
 
-      <div className='px-0 sm:px-10 w-full overflow-scroll'>
-        <table className='w-full border-spacing-y-4 border-separate'>
-          <tr className='text-left'>
-            <th className='font-bold text-black text-xl pl-5'>Status</th>
-            <th className='font-bold text-black text-xl'>Source Tx</th>
-            <th className='font-bold text-black text-xl'>From</th>
-            <th className='font-bold text-black text-xl'>Destination Tx</th>
-            <th className='font-bold text-black text-xl'>Protocol</th>
-            <th className='font-bold text-black text-xl'>Created</th>
-          </tr>
-          {transactions.map((transaction: CrossChainTransaction) => {
-            return <TransactionCard key={transaction.id} transaction={transaction} />
-          })}
-        </table>
+      <div className='px-0 sm:px-10 w-full'>
+        <div className='overflow-scroll sm:overflow-auto mb-4'>
+          <table className='w-full border-spacing-y-4 border-separate'>
+            <tr className='text-left'>
+              <th className='font-bold text-black text-xl pl-5'>Status</th>
+              <th className='font-bold text-black text-xl'>Source Tx</th>
+              <th className='font-bold text-black text-xl'>From</th>
+              <th className='font-bold text-black text-xl'>Destination Tx</th>
+              <th className='font-bold text-black text-xl'>Protocol</th>
+              <th className='font-bold text-black text-xl'>Created</th>
+            </tr>
+            {transactions.map((transaction: CrossChainTransaction) => {
+              return <TransactionCard key={transaction.id} transaction={transaction} />
+            })}
+          </table>
+        </div>
         <div className='flex justify-center'>
           <Pagination
             showControls

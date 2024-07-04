@@ -67,7 +67,7 @@ export default function TransactionCard({ transaction }: Props) {
                 width={20}
                 height={20}
                 alt={transaction.dstChainId.toString()}
-                className='rounded-full'
+                className='rounded-full min-w-[20px] min-h-[20px]'
               />
             </div>
 

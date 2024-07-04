@@ -11,8 +11,10 @@ export const metadata: Metadata = {
 
 export default function TransactionDetailPage({ params }: { params: { id: string } }) {
   return (
-    <WithApollo>
-      <TransactionDetail params={params} />
-    </WithApollo>
+    <div className='px-6 sm:px-0 sm:h-[calc(100vh-64px)]'>
+      <WithApollo>
+        <TransactionDetail params={params} />
+      </WithApollo>
+    </div>
   )
 }
