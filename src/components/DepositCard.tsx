@@ -54,8 +54,6 @@ export default function DepositCard({ width, height }: DepositCardProps) {
   useEffect(() => {
     const updateDecimalPlaces = () => {
       if (window.innerWidth < 640) {
-        setBalance(roundedNumber(balance, 2))
-      } else if (window.innerWidth < 1024) {
         setBalance(roundedNumber(balance, 4))
       } else {
         setBalance(roundedNumber(balance, 6))
@@ -84,7 +82,6 @@ export default function DepositCard({ width, height }: DepositCardProps) {
             )
           }
           renderValue={(items) => {
-            console.log(items)
             return items.map((item) => (
               <p key={item.key} className='text-green pl-1 font-bold text-lg'>
                 {item.key!.toString()}
@@ -95,7 +92,8 @@ export default function DepositCard({ width, height }: DepositCardProps) {
           {tokens.map((token) => (
             <SelectItem
               key={token.key}
-              value={token.value}
+              textValue={token.value}
+              aria-label={token.value}
               startContent={
                 token.value === 'ETH' ? (
                   <Image src={'/logo/ethereum.svg'} width={15} height={15} alt='ETH' />
